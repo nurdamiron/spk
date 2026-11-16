@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#185fa5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Строй Трекер">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<title>Строй Трекер</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--tx:#1c1c1a;--tx2:#6b6a64;--bd:#e3e2dc;--ac:#185fa5;--acbg:#e6f1fb;--ok:#3b6d11;--okbg:#eaf3de;--warn:#854f0b;--warnbg:#faeeda;--bad:#a32d2d;--badbg:#fcebeb}
+@media(prefers-color-scheme:dark){:root{--bg:#161615;--card:#212120;--tx:#efeee8;--tx2:#a2a199;--bd:#37362f;--ac:#85b7eb;--acbg:#0c447c;--ok:#97c459;--okbg:#27500a;--warn:#fac775;--warnbg:#633806;--bad:#f09595;--badbg:#791f1f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+html{overscroll-behavior-y:contain;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));-webkit-tap-highlight-color:transparent}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--bd);padding:calc(10px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) 10px calc(16px + env(safe-area-inset-left,0px));display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header b{font-size:16px}.sp{flex:1}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--tx);padding:6px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--ac);color:#fff}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav a{flex:1;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx2);text-decoration:none;font-size:12px}
+nav a svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav a.on{color:var(--ac);font-weight:600}
+main{max-width:980px;margin:auto;padding:12px calc(16px + env(safe-area-inset-right,0px)) 24px calc(16px + env(safe-area-inset-left,0px))}
+.stickybar{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:4;padding:10px 0;background:linear-gradient(transparent,var(--bg) 30%)}
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.sheet .top{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd);background:var(--card)}
+.sheet .list{flex:1;overflow:auto;padding:8px 12px calc(16px + env(safe-area-inset-bottom,0px))}
+.opt{width:100%;text-align:left;display:block;padding:14px;margin-bottom:8px;background:var(--card);border:1px solid var(--bd);border-radius:12px;min-height:56px}
+.pickbtn{flex:1;min-width:0;text-align:left;padding:12px;min-height:48px;border:1px solid var(--bd);border-radius:10px;background:var(--card);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pickbtn.empty{color:var(--tx2)}
+.banner{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;margin-bottom:12px;font-size:14px}
+.photo{position:relative;display:inline-block;width:64px;height:64px;border-radius:8px;overflow:hidden;margin:6px 6px 0 0;background:var(--acbg)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.shot{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border:1px solid var(--bd);border-radius:10px;background:var(--card);cursor:pointer}
+.shot input{position:absolute;opacity:0;width:0;height:0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+h1{font-size:20px;margin:6px 0 10px}h2{font-size:16px;margin:0 0 8px}.mut{color:var(--tx2);font-size:13px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+a.btn{color:var(--tx);text-decoration:none;display:inline-block}
+@media(max-width:480px){main{padding:8px 10px 80px}.card{padding:12px}.kpi .v{font-size:18px}th,td{padding:6px 4px}}
+.kpi{background:var(--bg);border-radius:8px;padding:10px 12px}.kpi .l{font-size:12px;color:var(--tx2)}.kpi .v{font-size:20px;font-weight:600}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.ok{background:var(--okbg);color:var(--ok)}.warn{background:var(--warnbg);color:var(--warn)}.bad{background:var(--badbg);color:var(--bad)}.info{background:var(--acbg);color:var(--ac)}
+.tc-ok{color:var(--ok)}.tc-bad{color:var(--bad)}
+.bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 6px;text-align:right;border-top:1px solid var(--bd)}th{color:var(--tx2);font-weight:500;border-top:0}th:first-child,td:first-child{text-align:left}
+.scroll{overflow-x:auto}
+.ocard{cursor:pointer}.ocard:hover{border-color:var(--ac)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input,select,textarea,button{font:inherit;color:var(--tx)}
+input[type=number],input[type=date],input[type=text],select{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:9px 10px;min-width:0}
+input[type=number]{width:92px}.grow{flex:1;min-width:120px}
+.btn{border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:9px 14px;cursor:pointer}
+.btn.pri{background:var(--tx);color:var(--bg);border-color:var(--tx);font-weight:600}
+.btn.big{width:100%;padding:14px;font-size:16px}
+.line{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px}
+.sig{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:10px;z-index:9}
+details{border-top:1px solid var(--bd);padding:8px 0}summary{cursor:pointer}
+.thumb{display:inline-block;width:46px;height:46px;border-radius:6px;background:var(--acbg);margin:4px 4px 0 0;text-align:center;line-height:46px;font-size:11px;color:var(--ac)}
+.hint{background:var(--acbg);color:var(--ac);border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:12px}
+input,select,textarea{font-size:16px}
+input[type=number],input[type=date],input[type=text],select{min-height:48px}
+.btn{min-height:44px}
+input[type=checkbox]{width:24px;height:24px;flex:none}
+@media(max-width:600px){
+  .scroll{overflow:visible}
+  table.cards,table.cards tbody{display:block}
+  table.cards tr:first-child{display:none}
+  table.cards tr{display:block;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--card)}
+  table.cards td{display:flex;justify-content:space-between;gap:12px;text-align:right;border:0;padding:3px 0}
+  table.cards td:first-child{display:block;text-align:left;font-weight:600;font-size:15px;padding-bottom:6px}
+  table.cards td[data-l]::before{content:attr(data-l);color:var(--tx2);text-align:left;font-weight:400}
+  table.cards td:last-child:empty{display:none}
+  input[type=number]{width:104px}
+  .pickbtn{flex:1 1 100%}
+  h1{font-size:22px}
+}
+@media(min-width:900px){nav{left:50%;right:auto;transform:translateX(-50%);width:420px;border:1px solid var(--bd);border-radius:14px 14px 0 0}}
+</style>
+</head>
+<body>
+<header>
+  <b>Строй Трекер</b><span class="pill warn">демо</span><span class="pill bad" id="net" style="display:none">нет связи</span><span class="sp"></span>
+  <span class="seg" id="roleSeg"></span>
+  <button class="btn" id="resetBtn" aria-label="Сбросить демо данные">Сброс</button>
+</header>
+<nav id="nav"></nav>
+<main id="app"></main>
+<script>
+const VAT=0.16, TODAY='2026-11-16';
+const OBJS=[
+ {id:1,name:'Коктобе 138 · НВК',customer:'ЖК Коктобе',items:[
+  {id:1,name:'Разработка грунта',unit:'м³',qty:800,price:2500,cost:1700},
+  {id:2,name:'Резервуар ЖБ (бетон В25)',unit:'м³',qty:120,price:85000,cost:62000},
+  {id:3,name:'Водопровод ПЭ Ø110',unit:'м',qty:100,price:18000,cost:12600},
+  {id:4,name:'Канализация Ø160',unit:'м',qty:100,price:27000,cost:19000},
+  {id:5,name:'Колодцы ЖБ',unit:'шт',qty:8,price:320000,cost:235000},
+  {id:6,name:'Обратная засыпка',unit:'м³',qty:600,price:1800,cost:1200}]},
+ {id:2,name:'Школа №45 · благоустройство',customer:'ГУ Отдел образования',items:[
+  {id:11,name:'Бордюр БР 100.30.15',unit:'м',qty:500,price:6500,cost:4400},
+  {id:12,name:'Плитка тротуарная',unit:'м²',qty:1200,price:14000,cost:10200},
+  {id:13,name:'Озеленение (газон)',unit:'м²',qty:900,price:5000,cost:3300}]},
+ {id:3,name:'Котельная Талгар · теплотрасса',customer:'ТОО Энергосервис',items:[
+  {id:21,name:'Труба стальная Ø219',unit:'м',qty:300,price:42000,cost:31000},
+  {id:22,name:'Изоляция ППУ',unit:'м',qty:300,price:12000,cost:8500},
+  {id:23,name:'Тепловые камеры',unit:'шт',qty:4,price:450000,cost:330000}]}
+];
+const CREWS=[
+ {id:1,obj:1,name:'Бригада Ерлана',type:'volume',rate:8000,item:4},
+ {id:2,obj:1,name:'Бригада Марата',type:'volume',rate:5500,item:3},
+ {id:3,obj:1,name:'Сварщик Асхат',type:'day',rate:18000},
+ {id:4,obj:1,name:'Экскаватор JCB',type:'hour',rate:9000},
+ {id:5,obj:1,name:'Бетонщики Нурлана',type:'fixed',rate:2500000,item:2},
+ {id:10,obj:2,name:'Укладчики плитки',type:'volume',rate:4000,item:12},
+ {id:6,obj:2,name:'Бригада Данияра',type:'volume',rate:2800,item:11},
+ {id:7,obj:2,name:'Разнорабочие',type:'day',rate:12000},
+ {id:8,obj:3,name:'Монтажники Серика',type:'volume',rate:14000,item:21},
+ {id:9,obj:3,name:'Экскаватор JCB',type:'hour',rate:9000}
+];
+const TYPE_LBL={hour:'за час',day:'за день',volume:'за объём',fixed:'фикс за этап'};
+const MATSHARE=0.45, FACTOR={3:2.1,11:1.3,12:1.25};
+const FOREMAN={name:'Ерлан (прораб)',obj:1};
+
+function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function dayList(a,b){const out=[];let d=new Date(a+'T00:00:00Z');const e=new Date(b+'T00:00:00Z');while(d<=e){if(d.getUTCDay()!==0)out.push(d.toISOString().slice(0,10));d=new Date(d.getTime()+864e5)}return out}
+
+function seed(){
+  const R=rng(7), reports=[], payouts=[], imprest=[{date:'2026-11-03',amount:1500000,note:'На материалы и доставку'},{date:'2026-11-10',amount:1000000,note:'Топливо, мелкие закупки'}];
+  const cfg={1:{to:'2026-11-14',t:{1:.9,2:.45,3:.5,4:.7,5:.375,6:.3}},2:{to:'2026-11-13',t:{11:.4,12:.25,13:0}},3:{to:'2026-11-14',t:{21:.35,22:.2,23:.25}}};
+  OBJS.forEach(o=>{
+    const days=dayList('2026-11-03',cfg[o.id].to), byDay={};days.forEach(d=>byDay[d]={progress:[],labor:[],exp:[]});
+    o.items.forEach(it=>{
+      const tgt=cfg[o.id].t[it.id]*it.qty;if(!tgt)return;
+      const n=Math.min(days.length,3+Math.floor(R()*4)), pick=[...days].sort(()=>R()-.5).slice(0,n);
+      let w=pick.map(()=>.5+R()),sw=w.reduce((a,b)=>a+b,0),left=it.unit==='шт'?Math.round(tgt):tgt;
+      pick.forEach((d,i)=>{let q=i===n-1?left:left*w[i]/sw;q=it.unit==='шт'?Math.round(q):Math.round(q*2)/2;if(it.unit==='шт'&&i<n-1)q=Math.max(0,Math.min(q,left));left-=q;if(q>0)byDay[d].progress.push({item:it.id,qty:q})});
+    });
+    days.forEach(d=>{
+      const b=byDay[d];if(!b.progress.length)return;
+      b.progress.forEach(p=>{
+        const it=o.items.find(i=>i.id===p.item), f=FACTOR[it.id]||(.9+R()*.25);
+        const amt=Math.round(p.qty*it.cost*MATSHARE*f/1000)*1000;
+        if(amt>0)b.exp.push({cat:'Материал',amount:amt,esf:R()<.7,funding:R()<.5?'imprest':'office',item:it.id,note:'Закупка по позиции'});
+      });
+      if(R()<.5)b.exp.push({cat:'Топливо',amount:25000+Math.round(R()*15)*1000,esf:false,funding:'imprest',item:null,note:'Дизель для техники'});
+      CREWS.filter(c=>c.obj===o.id).forEach(c=>{
+        if(c.type==='volume'){const q=b.progress.filter(p=>p.item===c.item).reduce((a,p)=>a+p.qty,0);if(q)b.labor.push({crew:c.id,qty:q,amount:q*c.rate})}
+        else if(c.type==='fixed'){const it=o.items.find(i=>i.id===c.item),q=b.progress.filter(p=>p.item===c.item).reduce((a,p)=>a+p.qty,0);if(q)b.labor.push({crew:c.id,qty:q,amount:Math.round(c.rate*q/it.qty)})}
+        else if(c.type==='day')b.labor.push({crew:c.id,qty:1,amount:c.rate});
+        else b.labor.push({crew:c.id,qty:6+Math.floor(R()*4),amount:0}),b.labor[b.labor.length-1].amount=b.labor[b.labor.length-1].qty*c.rate;
+      });
+      reports.push({id:reports.length+1,obj:o.id,date:d,author:o.id===1?'Ерлан':'Прораб',submitted:d,backdated:false,photos:2+Math.floor(R()*3),...b});
+    });
+  });
+  const acc={};reports.forEach(r=>r.labor.forEach(l=>acc[l.crew]=(acc[l.crew]||0)+l.amount));
+  CREWS.forEach(c=>{const k=c.id===1?1.18:c.id===5?.55:.9;const a=Math.round((acc[c.id]||0)*k/10000)*10000;if(a)payouts.push({crew:c.id,date:'2026-11-12',amount:a,kind:'advance'})});
+  return {reports,payouts,imprest};
+}
+
+let S,role='owner';
+function load(){try{const x=localStorage.getItem('st_proto_v1');if(x)return JSON.parse(x)}catch(e){}return seed()}
+function save(){try{localStorage.setItem('st_proto_v1',JSON.stringify(S))}catch(e){}}
+S=load();
+
+const money=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ')+' ₸';
+const short=n=>{const a=Math.abs(n),s=n<0?'−':'';return a>=1e6?s+(a/1e6).toFixed(1).replace('.',',')+' млн':s+Math.round(a/1e3)+' тыс'};
+const pct=x=>(x*100).toFixed(0)+'%';
+const dfmt=d=>{const [y,m,dd]=d.split('-');return dd+'.'+m};
+const expCost=e=>e.esf?e.amount/(1+VAT):e.amount;
+
+function calc(o){
+  const reps=S.reports.filter(r=>r.obj===o.id&&!r.pending).sort((a,b)=>a.date<b.date?-1:1);
+  const it={};o.items.forEach(i=>it[i.id]={...i,q:0,direct:0});
+  let general=0,series=[],cumO=0,cumS=0,vatLost=0;
+  reps.forEach(r=>{
+    r.progress.forEach(p=>{it[p.item].q+=p.qty;cumO+=p.qty*it[p.item].price});
+    r.labor.forEach(l=>{const c=CREWS.find(c=>c.id===l.crew);cumS+=l.amount;(c&&c.item&&(c.type==='volume'||c.type==='fixed'))?it[c.item].direct+=l.amount:general+=l.amount});
+    r.exp.forEach(e=>{const c=expCost(e);cumS+=c;if(!e.esf&&e.cat==='Материал')vatLost+=e.amount-e.amount/(1+VAT);e.item?it[e.item].direct+=c:general+=c});
+    series.push({date:r.date,o:cumO,s:cumS});
+  });
+  const osv=o.items.reduce((a,i)=>a+it[i.id].q*i.price,0);
+  const contract=o.items.reduce((a,i)=>a+i.qty*i.price,0), planCost=o.items.reduce((a,i)=>a+i.qty*i.cost,0);
+  let spent=0,fc=0;
+  const rows=o.items.map(i=>{const x=it[i.id],osvI=x.q*i.price,fact=x.direct+(osv?general*osvI/osv:0);spent+=fact;
+    const ready=x.q/i.qty,u=ready>=.1?fact/x.q:i.cost;fc+=fact+(i.qty-x.q)*u;
+    const planCostDone=x.q*i.cost;
+    return {...x,osv:osvI,fact,ready,planCostDone,margin:osvI?(osvI-fact)/osvI:null,cpi:fact?planCostDone/fact:null,planMargin:(i.price-i.cost)/i.price}});
+  const last=series.slice(-6),span=last.length>1?(last[last.length-1].o-last[0].o)/Math.max(1,(new Date(last[last.length-1].date)-new Date(last[0].date))/864e5):0;
+  const daysLeft=span>0?(contract-osv)/span:null;
+  const fDate=daysLeft?new Date(new Date(TODAY).getTime()+daysLeft*864e5):null;
+  const sigs=[];
+  rows.forEach(r=>{if(r.ready>=.1&&r.margin<0)sigs.push(['bad',`«${r.name}» в минусе: маржа ${pct(r.margin)} при готовности ${pct(r.ready)}`]);else if(r.ready>=.1&&r.cpi<.9)sigs.push(['warn',`«${r.name}»: тратим больше плана (индекс затрат ${r.cpi.toFixed(2)})`])});
+  const lastRep=reps.length?reps[reps.length-1].date:null;
+  if(lastRep!==TODAY)sigs.push(['warn',`Отчёт за сегодня (${dfmt(TODAY)}) не сдан, последний — ${lastRep?dfmt(lastRep):'нет'}`]);
+  if(vatLost>0)sigs.push(['info',`Потеряно на НДС без ЭСФ: ${money(vatLost)} (материалы)`]);
+  const profit=osv-spent;
+  return {o,reps,rows,osv,spent,profit,margin:osv?profit/osv:0,contract,planMargin:1-planCost/contract,ready:osv/contract,fcProfit:contract-fc,fcMargin:(contract-fc)/contract,fDate,series,sigs,vatLost};
+}
+function crewBal(c){const acc=S.reports.filter(r=>!r.pending).reduce((a,r)=>a+r.labor.filter(l=>l.crew===c.id).reduce((x,l)=>x+l.amount,0),0),paid=S.payouts.filter(p=>p.crew===c.id).reduce((a,p)=>a+p.amount,0);return {acc,paid,debt:acc-paid}}
+function imprestBal(){const i=S.imprest.reduce((a,x)=>a+x.amount,0),sp=S.reports.filter(r=>r.obj===1).reduce((a,r)=>a+r.exp.filter(e=>e.funding==='imprest').reduce((x,e)=>x+e.amount,0),0),nr=S.reports.filter(r=>r.obj===1).reduce((a,r)=>a+r.exp.filter(e=>e.funding==='imprest'&&e.noReceipt).reduce((x,e)=>x+e.amount,0),0);return {issued:i,spent:sp,left:i-sp,noReceipt:nr}}
+
+function chart(series){
+  if(series.length<2)return '';
+  const W=640,H=170,P=8,mx=Math.max(...series.map(s=>Math.max(s.o,s.s)))*1.05,x=i=>P+i*(W-2*P)/(series.length-1),y=v=>H-18-(v/mx)*(H-30);
+  const pl=k=>series.map((s,i)=>x(i)+','+y(s[k])).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Освоено и потрачено по дням"><polyline points="${pl('o')}" fill="none" stroke="#378ADD" stroke-width="2.5"/><polyline points="${pl('s')}" fill="none" stroke="#D85A30" stroke-width="2.5"/><text x="${P}" y="${H-3}" font-size="11" fill="currentColor">${dfmt(series[0].date)}</text><text x="${W-P}" y="${H-3}" font-size="11" text-anchor="end" fill="currentColor">${dfmt(series[series.length-1].date)}</text></svg>
+  <div class="mut"><span style="color:#378ADD">━</span> освоено ${short(series[series.length-1].o)} &nbsp; <span style="color:#D85A30">━</span> потрачено ${short(series[series.length-1].s)}</div>`;
+}
+const mcls=m=>m==null?'':m<0?'tc-bad':m<.15?'':'tc-ok';
+function status(c){const bad=c.rows.some(r=>r.ready>=.1&&r.margin<0);return bad||c.fcMargin<c.planMargin-.1?['bad','Маржа падает']:c.fcMargin<c.planMargin-.05?['warn','Следить']:['ok','В норме']}
+
+function viewObjects(){
+  let tot=0,totS=0;const h=OBJS.map(o=>{const c=calc(o);tot+=c.osv;totS+=c.spent;const [k,l]=status(c);
+    return `<div class="card ocard" onclick="go('#/obj/${o.id}')"><div class="row"><b class="grow">${o.name}</b><span class="pill ${k}">${l}</span></div>
+    <div class="mut">${o.customer} · договор ${short(c.contract)} без НДС</div><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,c.ready*100)}%"></i></div>
+    <div class="grid"><div class="kpi"><div class="l">Освоено (${pct(c.ready)})</div><div class="v">${short(c.osv)}</div></div><div class="kpi"><div class="l">Потрачено</div><div class="v">${short(c.spent)}</div></div><div class="kpi"><div class="l">Прибыль сейчас</div><div class="v ${c.profit<0?'tc-bad':'tc-ok'}">${short(c.profit)}</div></div><div class="kpi"><div class="l">Маржа факт / план</div><div class="v">${pct(c.margin)} <span class="mut">/ ${pct(c.planMargin)}</span></div></div></div>
+    ${c.sigs.filter(s=>s[0]!=='info').slice(0,2).map(s=>`<div class="sig ${s[0]}">${s[0]==='bad'?'●':'▲'} ${s[1]}</div>`).join('')}</div>`}).join('');
+  const ib=imprestBal();
+  return `<h1>Все объекты</h1><div class="grid" style="margin-bottom:12px"><div class="kpi card" style="margin:0"><div class="l">Освоено по всем</div><div class="v">${short(tot)}</div></div><div class="kpi card" style="margin:0"><div class="l">Потрачено по всем</div><div class="v">${short(totS)}</div></div><div class="kpi card" style="margin:0"><div class="l">Прибыль сейчас</div><div class="v ${tot-totS<0?'tc-bad':'tc-ok'}">${short(tot-totS)}</div></div><div class="kpi card" style="margin:0"><div class="l">Подотчёт Ерлана</div><div class="v">${short(ib.left)}</div></div></div>${h}`;
+}
+
+function viewObject(id){
+  const o=OBJS.find(x=>x.id==id),c=calc(o),[k,l]=status(c);
+  const crews=CREWS.filter(x=>x.obj===o.id);
+  return `<div class="row"><a href="#/" onclick="go('#/');return false" class="btn">← Объекты</a><span class="sp"></span><span class="pill ${k}">${l}</span></div><h1>${o.name}</h1><div class="mut">${o.customer} · договор ${money(c.contract)} без НДС (с НДС ${money(c.contract*(1+VAT))})</div>
+  <div style="height:10px"></div>${c.sigs.map(s=>`<div class="sig ${s[0]}">${s[0]==='bad'?'●':s[0]==='warn'?'▲':'ℹ'} ${s[1]}</div>`).join('')}
+  <div class="grid card"><div class="kpi"><div class="l">Освоено</div><div class="v">${short(c.osv)}</div><div class="mut">${pct(c.ready)} договора</div></div><div class="kpi"><div class="l">Потрачено</div><div class="v">${short(c.spent)}</div></div><div class="kpi"><div class="l">Прибыль сейчас</div><div class="v ${c.profit<0?'tc-bad':'tc-ok'}">${short(c.profit)}</div><div class="mut">маржа ${pct(c.margin)}</div></div>
+  <div class="kpi"><div class="l">Прогноз прибыли</div><div class="v ${c.fcProfit<0?'tc-bad':'tc-ok'}">${short(c.fcProfit)}</div><div class="mut">маржа ${pct(c.fcMargin)} (план ${pct(c.planMargin)})</div></div>
+  <div class="kpi"><div class="l">Прогноз завершения</div><div class="v">${c.fDate?c.fDate.toLocaleDateString('ru-RU',{day:'numeric',month:'short'}):'—'}</div><div class="mut">по темпу 6 дней</div></div></div>
+  <div class="card"><h2>Освоено и потрачено по дням</h2>${chart(c.series)}</div>
+  <div class="card"><h2>Позиции КП</h2><div class="scroll"><table class="cards"><tr><th>Позиция</th><th>Готово</th><th>Освоено</th><th>План с/с</th><th>Факт с/с</th><th>Маржа</th><th>План</th></tr>${c.rows.map(r=>`<tr><td>${r.name}<div class="mut">${r.q} из ${r.qty} ${r.unit}</div></td><td data-l="Готово">${pct(r.ready)}</td><td data-l="Освоено">${short(r.osv)}</td><td data-l="Плановая себестоимость">${short(r.planCostDone)}</td><td data-l="Фактическая себестоимость">${short(r.fact)}</td><td data-l="Маржа" class="${mcls(r.margin)}">${r.margin==null?'—':pct(r.margin)}</td><td data-l="Маржа по плану" class="mut">${pct(r.planMargin)}</td></tr>`).join('')}</table></div><div class="mut" style="margin-top:6px">Общие расходы (техника, топливо, поденщики) распределены по позициям пропорционально освоению. Расходы с ЭСФ — без НДС.</div></div>
+  <div class="card"><h2>Бригады на объекте</h2><table class="cards"><tr><th>Кто</th><th>Ставка</th><th>Начислено</th><th>Выдано</th><th>Долг</th></tr>${crews.map(cr=>{const b=crewBal(cr);return `<tr><td>${cr.name}</td><td data-l="Оплата" class="mut">${TYPE_LBL[cr.type]}</td><td data-l="Начислено">${short(b.acc)}</td><td data-l="Выдано">${short(b.paid)}</td><td data-l="${b.debt<0?'Переплата':'Долг'}" class="${b.debt<0?'tc-bad':''}">${short(Math.abs(b.debt))}</td></tr>`}).join('')}</table></div>
+  <div class="card"><h2>Журнал отчётов</h2>${c.reps.slice().reverse().map(r=>{const lab=r.labor.reduce((a,l)=>a+l.amount,0),ex=r.exp.reduce((a,e)=>a+expCost(e),0),osv=r.progress.reduce((a,p)=>a+p.qty*o.items.find(i=>i.id===p.item).price,0);
+   return `<details><summary><b>${dfmt(r.date)}</b> · ${r.author}${r.backdated?' <span class="pill warn">задним числом</span>':''} · освоено ${short(osv)}, потрачено ${short(lab+ex)} · фото ${r.photos}</summary>
+   <div class="mut">Выполнение</div>${r.progress.map(p=>`<div>• ${o.items.find(i=>i.id===p.item).name}: ${p.qty} ${o.items.find(i=>i.id===p.item).unit}</div>`).join('')||'—'}
+   <div class="mut" style="margin-top:6px">Люди</div>${r.labor.map(l=>{const cr=CREWS.find(c=>c.id===l.crew);return `<div>• ${cr.name}: ${money(l.amount)}</div>`}).join('')||'—'}
+   <div class="mut" style="margin-top:6px">Расходы</div>${r.exp.map(e=>`<div>• ${e.cat}: ${money(e.amount)} ${e.esf?'(ЭСФ)':'(без ЭСФ)'} · ${e.funding==='imprest'?'подотчёт':e.funding==='office'?'офис':'перечисление'}${e.noReceipt?' · <span class="tc-bad">без чека</span>':''}${e.note?' — '+e.note:''}</div>`).join('')||'—'}
+   <div>${Array.from({length:r.photos},(_,i)=>`<span class="thumb">фото ${i+1}</span>`).join('')}</div></details>`}).join('')}</div>`;
+}
+
+function viewCrews(){
+  const ib=imprestBal();
+  return `<h1>Бригады и деньги</h1><div class="card"><h2>Подотчёт прораба Ерлана</h2><div class="grid"><div class="kpi"><div class="l">Выдано</div><div class="v">${short(ib.issued)}</div></div><div class="kpi"><div class="l">Потрачено</div><div class="v">${short(ib.spent)}</div></div><div class="kpi"><div class="l">На руках</div><div class="v">${short(ib.left)}</div></div><div class="kpi"><div class="l">Без чеков</div><div class="v ${ib.noReceipt?'tc-bad':''}">${short(ib.noReceipt)}</div></div></div><div style="margin-top:10px"><button class="btn" onclick="issueImprest()">+ Выдать в подотчёт</button></div></div>
+  <div class="card"><h2>Баланс по бригадам</h2><div class="scroll"><table class="cards"><tr><th>Бригада</th><th>Объект</th><th>Ставка</th><th>Начислено</th><th>Выдано</th><th>Долг / переплата</th><th></th></tr>${CREWS.map(cr=>{const b=crewBal(cr);return `<tr><td>${cr.name}</td><td data-l="Объект" class="mut">${OBJS.find(o=>o.id===cr.obj).name.split(' · ')[0]}</td><td data-l="Оплата" class="mut">${TYPE_LBL[cr.type]}, ${cr.type==='fixed'?short(cr.rate):Math.round(cr.rate).toLocaleString('ru-RU')+' ₸'}</td><td data-l="Начислено">${short(b.acc)}</td><td data-l="Выдано">${short(b.paid)}</td><td data-l="${b.debt<0?'Переплата':'Долг'}" class="${b.debt<0?'tc-bad':''}">${short(Math.abs(b.debt))}</td><td><button class="btn" style="width:100%" onclick="payout(${cr.id})">Выдать деньги</button></td></tr>`}).join('')}</table></div></div>`;
+}
+function payout(id){const c=CREWS.find(x=>x.id===id),v=prompt('Сколько выдать «'+c.name+'», ₸?','100000');const n=parseInt(v);if(n>0){S.payouts.push({crew:id,date:TODAY,amount:n,kind:'advance'});save();render();toast('Выдача записана')}}
+function issueImprest(){const v=prompt('Сколько выдать Ерлану в подотчёт, ₸?','200000');const n=parseInt(v);if(n>0){const note=prompt('Комментарий','На материалы')||'';S.imprest.push({date:TODAY,amount:n,note});save();render();toast('Выдано в подотчёт')}}
+
+/* ---------- foreman ---------- */
+let F=null;
+function newForm(){const o=OBJS[0],prev=S.reports.filter(r=>r.obj===1).sort((a,b)=>a.date<b.date?1:-1).slice(0,3);
+  const ids=[...new Set(prev.flatMap(r=>r.labor.map(l=>l.crew)))];
+  F={date:TODAY,progress:[{item:'',qty:''}],people:CREWS.filter(c=>c.obj===1).map(c=>({crew:c.id,on:ids.includes(c.id),val:c.type==='hour'?8:1})),exp:[],photoUrls:[]}}
+function addPhotos(inp){[...inp.files].forEach(f=>{try{F.photoUrls.push(URL.createObjectURL(f))}catch(e){}});render()}
+function viewReport(){
+  if(!F)newForm();const o=OBJS[0],ib=imprestBal(),done={};
+  S.reports.filter(r=>r.obj===1).forEach(r=>r.progress.forEach(p=>done[p.item]=(done[p.item]||0)+p.qty));
+  const fin=F.progress.reduce((a,p)=>(a[p.item]=(a[p.item]||0)+(parseFloat(p.qty)||0),a),{});
+  return `<h1>Отчёт за день</h1><div class="hint">Так видит прораб: цен, себестоимости и прибыли нет. Люди подставлены со вчерашнего дня.</div>
+  <div class="card"><div class="row"><b class="grow">${o.name}</b><input type="date" value="${F.date}" onchange="F.date=this.value"></div><div class="row" style="margin-top:6px"><span class="pill info">В подотчёте на руках: ${money(ib.left)}</span>${F.date!==TODAY?'<span class="pill warn">задним числом</span>':''}</div></div>
+  <div class="card"><h2>1. Выполнение</h2>${F.progress.map((p,i)=>{const it=o.items.find(x=>x.id==p.item),d=it?(done[it.id]||0):0,after=it?d+(fin[it.id]||0):0;
+   return `<div class="line"><div class="row"><button class="pickbtn ${it?'':'empty'}" onclick="openPicker(${i})">${it?it.name:'Выбрать позицию из КП…'}</button>
+   <input type="number" inputmode="decimal" placeholder="Объём" value="${p.qty}" oninput="F.progress[${i}].qty=this.value" onchange="render()">${it?`<span>${it.unit}</span>`:''}<button class="btn" onclick="F.progress.splice(${i},1);render()" aria-label="Убрать">✕</button></div>
+   ${it?`<div class="mut" style="margin-top:4px">Всего будет ${Math.round(after*10)/10} из ${it.qty} ${it.unit} ${after>it.qty?'<span class="pill bad">больше КП, это доп. работа?</span>':''}</div><div class="bar" style="margin-top:4px"><i style="width:${Math.min(100,after/it.qty*100)}%"></i></div>`:''}</div>`}).join('')}
+   <div class="row"><button class="btn" onclick="F.progress.push({item:'',qty:''});render()">+ Позиция из КП</button><label class="shot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Сфотографировать<input type="file" accept="image/*" capture="environment" multiple onchange="addPhotos(this)"></label></div><div>${F.photoUrls.map(u=>`<span class="photo"><img src="${u}" alt="Фото"></span>`).join('')}</div></div>
+  <div class="card"><h2>2. Люди и техника</h2>${F.people.map((p,i)=>{const c=CREWS.find(x=>x.id===p.crew);
+   return `<div class="line row"><label class="row grow"><input type="checkbox" ${p.on?'checked':''} onchange="F.people[${i}].on=this.checked"> <span>${c.name}<br><span class="mut">${TYPE_LBL[c.type]}</span></span></label>${c.type==='hour'?`<input type="number" value="${p.val}" oninput="F.people[${i}].val=this.value"> <span>ч</span>`:c.type==='day'?`<input type="number" step="0.5" value="${p.val}" oninput="F.people[${i}].val=this.value"> <span>дн.</span>`:`<span class="mut">считается из выполнения</span>`}</div>`}).join('')}</div>
+  <div class="card"><h2>3. Расходы</h2>${F.exp.map((e,i)=>`<div class="line"><div class="row"><select onchange="F.exp[${i}].cat=this.value">${['Материал','Топливо','Доставка','Техника','Прочее'].map(c=>`<option ${c===e.cat?'selected':''}>${c}</option>`).join('')}</select><input type="number" inputmode="numeric" placeholder="Сумма ₸" value="${e.amount}" oninput="F.exp[${i}].amount=this.value"><button class="btn" onclick="F.exp.splice(${i},1);render()">✕</button></div>
+   <div class="row" style="margin-top:6px"><select onchange="F.exp[${i}].funding=this.value"><option value="imprest" ${e.funding==='imprest'?'selected':''}>Из подотчёта</option><option value="office" ${e.funding==='office'?'selected':''}>Оплатил офис</option><option value="transfer" ${e.funding==='transfer'?'selected':''}>Перечисление</option></select>
+   <select onchange="F.exp[${i}].esf=this.value==='1'"><option value="1" ${e.esf?'selected':''}>Есть ЭСФ с НДС</option><option value="0" ${!e.esf?'selected':''}>Без НДС / без ЭСФ</option></select>
+   <select onchange="F.exp[${i}].item=this.value"><option value="">Позиция: общий расход</option>${o.items.map(x=>`<option value="${x.id}" ${x.id==e.item?'selected':''}>${x.name}</option>`).join('')}</select></div>
+   <div class="row" style="margin-top:6px"><input type="text" class="grow" placeholder="Комментарий, например: труба ПЭ 110, 40 м" value="${e.note}" oninput="F.exp[${i}].note=this.value"><label class="row"><input type="checkbox" ${e.receipt?'checked':''} onchange="F.exp[${i}].receipt=this.checked"> 🧾 чек есть</label></div></div>`).join('')}
+   <button class="btn" onclick="F.exp.push({cat:'Материал',amount:'',funding:'imprest',esf:true,item:'',note:'',receipt:true});render()">+ Расход</button></div>
+  <div class="stickybar"><button class="btn pri big" onclick="submitReport()">${navigator.onLine?'Отправить отчёт':'Сохранить, отправится при связи'}</button></div>`;
+}
+function submitReport(){
+  const o=OBJS[0],prog=F.progress.filter(p=>p.item&&parseFloat(p.qty)>0).map(p=>({item:+p.item,qty:parseFloat(p.qty)}));
+  const exp=F.exp.filter(e=>parseFloat(e.amount)>0).map(e=>({cat:e.cat,amount:parseFloat(e.amount),esf:e.esf,funding:e.funding,item:e.item?+e.item:null,note:e.note,noReceipt:!e.receipt}));
+  if(!prog.length&&!exp.length&&!F.people.some(p=>p.on))return toast('Заполните хотя бы выполнение, людей или расход');
+  if(S.reports.some(r=>r.obj===1&&r.date===F.date)&&!confirm('Отчёт за эту дату уже есть. Добавить ещё один?'))return;
+  const labor=[];F.people.filter(p=>p.on).forEach(p=>{const c=CREWS.find(x=>x.id===p.crew);
+    if(c.type==='hour'||c.type==='day'){const v=parseFloat(p.val)||0;if(v)labor.push({crew:c.id,qty:v,amount:v*c.rate})}
+    else{const q=prog.filter(x=>x.item===c.item).reduce((a,x)=>a+x.qty,0);if(q){const it=o.items.find(i=>i.id===c.item);labor.push({crew:c.id,qty:q,amount:c.type==='volume'?q*c.rate:Math.round(c.rate*q/it.qty)})}}});
+  S.reports.push({id:S.reports.length+1,obj:1,date:F.date,author:'Ерлан',submitted:TODAY,backdated:F.date!==TODAY,pending:!navigator.onLine,progress:prog,labor,exp,photos:F.photoUrls.length});
+  const wait=!navigator.onLine;save();F=null;go('#/history');toast(wait?'Сохранено в телефоне. Уйдёт, когда появится связь':'Отчёт отправлен. Цифры у владельца обновлены');
+}
+function viewHistory(){
+  const o=OBJS[0];return `<h1>Мои отчёты</h1>${S.reports.filter(r=>r.obj===1).sort((a,b)=>a.date<b.date?1:-1).map(r=>`<div class="card"><div class="row"><b class="grow">${dfmt(r.date)}</b>${r.pending?'<span class="pill bad">не отправлен</span>':r.backdated?'<span class="pill warn">задним числом</span>':'<span class="pill ok">отправлен</span>'}</div>${r.progress.map(p=>{const it=o.items.find(i=>i.id===p.item);return `<div>• ${it.name}: ${p.qty} ${it.unit}</div>`}).join('')||'<div class="mut">Выполнения нет</div>'}<div class="mut">Людей: ${r.labor.length} · расходов: ${r.exp.length} · фото: ${r.photos}</div></div>`).join('')}`;
+}
+
+/* ---------- shell ---------- */
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
+let route='#/';
+function go(h){route=h;try{location.hash=h}catch(e){}scrollTo(0,0);render()}
+function render(){
+  const h=route,app=document.getElementById('app');
+  document.getElementById('roleSeg').innerHTML=`<button class="${role==='owner'?'on':''}" onclick="setRole('owner')">Владелец</button><button class="${role==='foreman'?'on':''}" onclick="setRole('foreman')">Прораб</button>`;
+  const links=role==='owner'?[['#/','Объекты','home'],['#/crews','Деньги','wallet']]:[['#/report','Отчёт','check'],['#/history','История','clock']];
+  document.getElementById('nav').innerHTML=links.map(([a,t,ic])=>`<a href="${a}" onclick="go('${a}');return false" class="${h===a||(a==='#/'&&h.startsWith('#/obj'))?'on':''}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[ic]}</svg>${t}</a>`).join('');
+  const y=scrollY;
+  if(role==='owner')app.innerHTML=h.startsWith('#/obj/')?viewObject(h.split('/')[2]):h==='#/crews'?viewCrews():viewObjects();
+  else app.innerHTML=h==='#/history'?viewHistory():viewReport();
+  app.innerHTML=banners()+app.innerHTML;
+  const n=document.getElementById('net');if(n)n.style.display=navigator.onLine?'none':'inline-block';
+  scrollTo(0,y);
+}
+const ICONS={home:'<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/>',wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><circle cx="16" cy="15" r="1.2"/>',check:'<path d="M9 4h6v3H9z"/><path d="M7 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1"/><path d="M8 13l3 3 5-6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
+
+/* ---------- установка, связь, обновление ---------- */
+let deferredInstall=null,hintOff=false,updateReady=false;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function banners(){
+  let h='';
+  const un=S.reports.filter(r=>r.pending).length;
+  if(un)h+=`<div class="banner bad"><span class="grow"><b>Не отправлено: ${un}</b><br>${navigator.onLine?'Связь есть, можно отправлять.':'Ждём связь. Откройте приложение, когда появится интернет.'}</span><button class="btn" onclick="flush()">Отправить</button></div>`;
+  if(updateReady)h+=`<div class="banner info"><span class="grow">Есть новая версия приложения</span><button class="btn" onclick="location.reload()">Обновить</button></div>`;
+  if(!isStandalone()&&!hintOff){
+    if(deferredInstall)h+=`<div class="banner info"><span class="grow">Поставьте приложение на экран телефона</span><button class="btn" onclick="installApp()">Установить</button><button class="btn" aria-label="Закрыть" onclick="hintOff=true;render()">✕</button></div>`;
+    else if(isIOS)h+=`<div class="banner info"><span class="grow"><b>Как поставить на экран Домой</b><br>1. Нажмите «Поделиться» внизу Safari<br>2. Выберите «На экран Домой»<br>3. Нажмите «Добавить»</span><button class="btn" aria-label="Закрыть" onclick="hintOff=true;render()">✕</button></div>`;
+  }
+  return h;
+}
+async function installApp(){if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;render()}
+function flush(){if(!navigator.onLine)return toast('Связи пока нет');const n=S.reports.filter(r=>r.pending).length;if(!n)return;S.reports.forEach(r=>r.pending=false);save();render();toast('Отправлено отчётов: '+n)}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;render()});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;render()});
+window.addEventListener('online',()=>{flush();render()});
+window.addEventListener('offline',render);
+
+/* ---------- выбор позиции на весь экран ---------- */
+let PK=null;
+function openPicker(i){PK={i,q:''};const el=document.createElement('div');el.id='sheet';el.className='sheet';el.innerHTML=`<div class="top"><button class="btn" aria-label="Назад" onclick="closePicker()">←</button><input type="text" id="pq" class="grow" placeholder="Найти позицию" autocomplete="off" oninput="PK.q=this.value;drawList()"></div><div class="list" id="plist"></div>`;document.body.appendChild(el);drawList()}
+function drawList(){
+  const o=OBJS[0],done={};S.reports.filter(r=>r.obj===1).forEach(r=>r.progress.forEach(p=>done[p.item]=(done[p.item]||0)+p.qty));
+  const q=PK.q.trim().toLowerCase(),list=o.items.filter(x=>x.name.toLowerCase().includes(q));
+  document.getElementById('plist').innerHTML=list.map(x=>`<button class="opt" onclick="choose(${x.id})"><b>${x.name}</b><div class="mut">Сделано ${Math.round((done[x.id]||0)*10)/10} из ${x.qty} ${x.unit}</div></button>`).join('')||'<div class="mut" style="padding:16px">Такой позиции нет в КП. Если это дополнительная работа, скажите владельцу.</div>';
+}
+function choose(id){F.progress[PK.i].item=String(id);closePicker();render()}
+function closePicker(){const e=document.getElementById('sheet');if(e)e.remove();PK=null}
+function setRole(r){role=r;go(r==='owner'?'#/':'#/report')}
+window.addEventListener('hashchange',()=>{if(location.hash&&location.hash!==route){route=location.hash;scrollTo(0,0);render()}});
+document.getElementById('resetBtn').onclick=()=>{try{localStorage.removeItem('st_proto_v1')}catch(e){}S=seed();F=null;render();toast('Демо сброшено')};
+render();
+if(navigator.onLine)flush();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data==='update'){updateReady=true;render()}});
+}
+</script>
+</body>
+</html>
