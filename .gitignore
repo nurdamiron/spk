@@ -1,1 +1,6 @@
 .DS_Store
+price-base/data/snapshots/*
+!price-base/data/snapshots/.gitkeep
+*.bak
+*.pkl
+__pycache__/
