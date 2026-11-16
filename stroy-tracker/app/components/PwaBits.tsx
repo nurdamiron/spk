@@ -86,10 +86,7 @@ export function PwaBits() {
       {!hidden && !install && ios && (
         <div className="banner info">
           <span className="grow">
-            <b>Как поставить на экран Домой</b>
-            <br />1. Нажмите «Поделиться» внизу Safari
-            <br />2. Выберите «На экран Домой»
-            <br />3. Нажмите «Добавить»
+            <b>Поставьте на экран Домой.</b> Нажмите «Поделиться» в Safari, затем «На экран Домой».
           </span>
           <button className="btn" aria-label="Закрыть" onClick={hide}>✕</button>
         </div>

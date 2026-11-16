@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { enqueue, sendReport, shrinkPhoto } from '@/lib/queue'
 
@@ -29,6 +29,14 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState<'sent' | 'queued' | null>(null)
+  const [online, setOnline] = useState(true)
+  useEffect(() => {
+    const up = () => setOnline(navigator.onLine)
+    up()
+    window.addEventListener('online', up)
+    window.addEventListener('offline', up)
+    return () => { window.removeEventListener('online', up); window.removeEventListener('offline', up) }
+  }, [])
 
   const byId = useMemo(() => new Map(items.map(i => [i.id, i])), [items])
   const inForm = useMemo(() => {
@@ -192,7 +200,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
       {error && <div className="err" role="alert">{error}</div>}
       <div className="stickybar">
         <button className="btn pri big" disabled={busy} onClick={submit}>
-          {busy ? 'Отправляем…' : typeof navigator !== 'undefined' && !navigator.onLine ? 'Сохранить, отправится при связи' : 'Отправить отчёт'}
+          {busy ? 'Отправляем…' : online ? 'Отправить отчёт' : 'Сохранить, отправится при связи'}
         </button>
       </div>
 

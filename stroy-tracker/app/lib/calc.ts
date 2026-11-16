@@ -87,7 +87,7 @@ export function calcObject(items: Item[], crews: Crew[], repsAll: Rep[], today: 
       sigs.push({ kind: 'warn', text: `«${r.name}»: тратим больше плана (индекс затрат ${r.cpi.toFixed(2)})` })
   }
   const lastDate = reps.length ? reps[reps.length - 1].report_date : null
-  if (lastDate !== today) sigs.push({ kind: 'warn', text: `Отчёт за сегодня не сдан, последний: ${lastDate ?? 'нет'}` })
+  if (lastDate !== today) sigs.push({ kind: 'warn', text: `Отчёт за сегодня не сдан, последний: ${lastDate ? dshort(lastDate) : 'нет'}` })
   if (vatLost > 0) sigs.push({ kind: 'info', text: `Потеряно на НДС без ЭСФ: ${Math.round(vatLost).toLocaleString('ru-RU')} ₸ (материалы)` })
 
   const profit = osv - spent

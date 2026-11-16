@@ -5,13 +5,16 @@ export const metadata: Metadata = {
   title: 'Строй Трекер',
   description: 'Ежедневный учёт на объектах: выполнение и расходы',
   manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'Строй Трекер', statusBarStyle: 'black-translucent' },
+  appleWebApp: { capable: true, title: 'Строй Трекер', statusBarStyle: 'default' },
   icons: { icon: '/icons/favicon-32.png', apple: '/icons/apple-touch-icon.png' },
   other: { 'mobile-web-app-capable': 'yes' },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#185fa5',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f2f2f7' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',

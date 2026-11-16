@@ -11,14 +11,14 @@ export function Chart({ series }: { series: { date: string; o: number; s: number
   return (
     <>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Освоено и потрачено по дням">
-        <polyline points={line('o')} fill="none" stroke="#378ADD" strokeWidth="2.5" />
-        <polyline points={line('s')} fill="none" stroke="#D85A30" strokeWidth="2.5" />
+        <polyline points={line('o')} fill="none" stroke="#007AFF" strokeWidth="2.5" />
+        <polyline points={line('s')} fill="none" stroke="#FF9500" strokeWidth="2.5" />
         <text x={P} y={H - 3} fontSize="11" fill="currentColor">{dshort(series[0].date)}</text>
         <text x={W - P} y={H - 3} fontSize="11" textAnchor="end" fill="currentColor">{dshort(last.date)}</text>
       </svg>
       <div className="mut">
-        <span style={{ color: '#378ADD' }}>●</span> освоено {short(last.o)} &nbsp;
-        <span style={{ color: '#D85A30' }}>●</span> потрачено {short(last.s)}
+        <span style={{ color: '#007AFF' }}>●</span> освоено {short(last.o)} &nbsp;
+        <span style={{ color: '#FF9500' }}>●</span> потрачено {short(last.s)}
       </div>
     </>
   )

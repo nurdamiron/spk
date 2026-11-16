@@ -4,9 +4,11 @@ export default function LoginPage() {
   return (
     <div className="loginwrap">
       <div className="loginbox">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="logo" src="/icons/icon-192.png" alt="" width={84} height={84} />
+        <h1>Строй Трекер</h1>
+        <p className="mut sub">Войдите по имени и паролю, которые вам дал владелец.</p>
         <div className="card">
-          <h1 style={{ marginTop: 0 }}>Строй Трекер</h1>
-          <p className="mut" style={{ marginTop: 0 }}>Войдите по имени и паролю, которые вам дал владелец.</p>
           <LoginForm />
         </div>
       </div>

@@ -16,9 +16,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <>
       <header>
-        <b>Строй Трекер</b>
+        <b className="brand">Строй Трекер</b>
         <span className="sp" />
-        <span className="mut" style={{ textAlign: 'right' }}>{p.name}<br />{ROLE[p.role]}</span>
+        <span className="who"><strong>{p.name}</strong>{ROLE[p.role]}</span>
         <LogoutButton />
       </header>
       <main>
