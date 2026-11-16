@@ -68,6 +68,28 @@ EMPTY_ROWS = [r for r in ROWS if not r["price"]]  # заглушки прошл�
 ROWS = [r for r in ROWS if r["price"]]
 KEYS = OrderedDict((k, [r for r in ROWS if r["key"] == k]) for k in KEYS_ALL)
 
+# ---- универсальный каталог (catalog/catalog_KZ.csv): позиции без цен тоже входят в базу со статусом «нужен поиск/запрос»
+CATALOG = os.path.join(ROOT, "catalog", "catalog_KZ.csv")
+if os.path.exists(CATALOG):
+    import csv
+    for c in csv.DictReader(open(CATALOG, encoding="utf-8"), delimiter=";"):
+        k = c["key"]
+        if c["volatile"] == "1":
+            VOLATILE.add(k)
+        if c["rare"] == "1":
+            RARE2.add(k)
+        if k in POS:
+            continue
+        POS[k] = dict(id=f"P{len(POS) + 1:03d}", group=c["group"], name=c["name"] + (f" ({c['gost']})" if c["gost"] else ""),
+                      base=c["base_unit"], uses=0, vol=c["volatile"] == "1")
+        KEYS[k] = []
+# записи агентов по новым ключам, которых нет ни в прошлом сборе, ни в каталоге
+for r in ROWS:
+    if r["key"] not in POS:
+        POS[r["key"]] = dict(id=f"P{len(POS) + 1:03d}", group=r.get("group") or "Прочее", name=r.get("what") or r["key"],
+                             base=r.get("base_unit") or r["unit"], uses=0, vol=False)
+        KEYS[r["key"]] = [x for x in ROWS if x["key"] == r["key"]]
+
 # ------------------------------------------------------------------ поставщики
 SATU_SELLER_TYPE = "не определён (проверить на странице компании)"
 DOMAIN_TYPE = {

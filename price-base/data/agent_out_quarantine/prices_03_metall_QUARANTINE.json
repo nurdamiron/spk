@@ -1,0 +1,60 @@
+[
+ {
+  "supplier": {
+   "name": "Profi-dom (profi-dom.kz)",
+   "form": "",
+   "type": "оптовая база",
+   "city": "Алматы",
+   "address": "г. Алматы, Ангарская, 97",
+   "phone": "+7 (747) 618-22-01",
+   "site": "https://profi-dom.kz/metalloprokat",
+   "company_url": "https://profi-dom.kz/metalloprokat"
+  },
+  "key": "ugolok",
+  "price": 1790,
+  "unit": "₸/м",
+  "vat": "НДС не указан",
+  "delivery": "не указана",
+  "conv": 265.2519893899204,
+  "conv_source": "Масса 1 м уголка 50×50×5 = 3,77 кг по ГОСТ 8509-93 (таблица сортамента): ₸/т = ₸/м ÷ 3,77 кг × 1000",
+  "url": "https://profi-dom.kz/metalloprokat",
+  "snapshot": "data/snapshots/03_metall_0003/profi-dom_kz_metalloprokat.html",
+  "quote": "Уголок равнополочный 50×50×5 ГОСТ 8509 ₸/м ≈1 790",
+  "note": "Таблица «Стоимость металлопроката в Алматы», колонка «СТОИМОСТЬ (KZT)» со знаком «≈» (приблизительно). Даты и НДС на странице не указаны. Конверсия ₸/м→₸/т по ГОСТ 8509-93.",
+  "group": "Металл, прокат, трубы",
+  "position_name": "Уголок 50×50×5, 75×75×6",
+  "base_unit": "₸/т",
+  "region": "Алматы",
+  "viewed_at": "2026-11-16T19:50",
+  "quarantine_reason": "Оркестратор: conv взят по памяти агента (массы 1 м ГОСТ 8509-93 / 8240-97 не загружены из документа) — правило 6. Вернуть в agent_out после сверки с таблицей ГОСТ."
+ },
+ {
+  "supplier": {
+   "name": "Profi-dom (profi-dom.kz)",
+   "form": "",
+   "type": "оптовая база",
+   "city": "Алматы",
+   "address": "г. Алматы, Ангарская, 97",
+   "phone": "+7 (747) 618-22-01",
+   "site": "https://profi-dom.kz/metalloprokat",
+   "company_url": "https://profi-dom.kz/metalloprokat"
+  },
+  "key": "shveller",
+  "price": 4355,
+  "unit": "₸/м",
+  "vat": "НДС не указан",
+  "delivery": "не указана",
+  "conv": 96.15384615384615,
+  "conv_source": "Масса 1 м швеллера 12П = 10,4 кг по ГОСТ 8240-97 (таблица сортамента): ₸/т = ₸/м ÷ 10,4 кг × 1000",
+  "url": "https://profi-dom.kz/metalloprokat",
+  "snapshot": "data/snapshots/03_metall_0003/profi-dom_kz_metalloprokat.html",
+  "quote": "Швеллер 12П ГОСТ 8240 ₸/м ≈4 355",
+  "note": "Таблица «Стоимость металлопроката в Алматы», колонка «СТОИМОСТЬ (KZT)» со знаком «≈» (приблизительно). Даты и НДС на странице не указаны. Конверсия ₸/м→₸/т по ГОСТ 8240-97.",
+  "group": "Металл, прокат, трубы",
+  "position_name": "Швеллер № 10–20",
+  "base_unit": "₸/т",
+  "region": "Алматы",
+  "viewed_at": "2026-11-16T19:50",
+  "quarantine_reason": "Оркестратор: conv взят по памяти агента (массы 1 м ГОСТ 8509-93 / 8240-97 не загружены из документа) — правило 6. Вернуть в agent_out после сверки с таблицей ГОСТ."
+ }
+]

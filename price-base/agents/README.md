@@ -4,6 +4,7 @@
 
 ```
 price-base/
+├─ catalog/                      # универсальный каталог позиций (~500): build_catalog.py → catalog_KZ.csv/.xlsx
 ├─ price_base_KZ.xlsx            # итоговая база (собирается скриптами)
 ├─ price_requests_drafts.md      # письма поставщикам (черновики)
 ├─ price_log.md                  # журнал
@@ -13,6 +14,7 @@ price-base/
 │  ├─ _RECORD_SCHEMA.md          # формат данных агентов
 │  ├─ 01_asfalt_nerud.md   02_beton.md   03_metall.md   04_zhbi.md   05_gidro.md
 │  ├─ 06_oborudovanie.md   07_ozelenenie.md   08_raboty.md
+│  ├─ 12_truby_seti.md   13_elektrika.md   14_obshhestroy.md   15_spectehnika.md
 │  ├─ 09_kontrol.md        # госзакупки / ССЦ / stat.gov (только контроль)
 │  ├─ 10_kontakty.md       # публичные контакты и реквизиты поставщиков
 │  └─ 11_qa.md             # независимая проверка (после всех)
@@ -34,9 +36,10 @@ price-base/
 
 ## Вариант Б — вручную, по сессии на агента
 1. Один раз: `python3 -m venv price-base/.venv && price-base/.venv/bin/pip install openpyxl requests`.
-2. Для каждого `agents/NN_*.md` (01–10) открой отдельную сессию в корне `spk` и отправь: «Прочитай `price-base/agents/NN_….md` и выполни целиком» — агенты пишут в разные файлы, их можно запускать одновременно.
+2. Для каждого `agents/NN_*.md` (01–10, 12–15) открой отдельную сессию в корне `spk` и отправь: «Прочитай `price-base/agents/NN_….md` и выполни целиком» — агенты пишут в разные файлы, их можно запускать одновременно.
 3. Когда все закончили:
 ```bash
+price-base/.venv/bin/python price-base/catalog/build_catalog.py
 price-base/.venv/bin/python price-base/scripts/load_rows.py
 price-base/.venv/bin/python price-base/scripts/collect_verify.py
 price-base/.venv/bin/python price-base/scripts/build_price_base.py

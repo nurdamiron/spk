@@ -4,3 +4,9 @@ price-base/data/snapshots/*
 *.bak
 *.pkl
 __pycache__/
+price-base/data/archive_*/
+stroy-tracker/prototype/.vercel/
+stroy-tracker/app/.env*
+stroy-tracker/app/.vercel/
+stroy-tracker/app/.next/
+stroy-tracker/app/node_modules/
