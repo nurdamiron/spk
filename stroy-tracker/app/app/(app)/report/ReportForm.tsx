@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { enqueue, sendReport, shrinkPhoto } from '@/lib/queue'
+import { Add, Back, Photo, Remove } from '@/components/Icons'
 
 type Item = { id: string; name: string; unit: string; qty: number; done: number }
 type CrewOpt = { id: string; name: string; type: 'hour' | 'day' | 'volume' | 'fixed'; on: boolean }
@@ -117,7 +118,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
                 <input type="number" inputMode="decimal" placeholder="Объём" value={r.qty} aria-label="Объём"
                   onChange={e => set({ rows: f.rows.map((x, j) => (j === i ? { ...x, qty: e.target.value } : x)) })} />
                 {it && <span>{it.unit}</span>}
-                <button type="button" className="btn" aria-label="Убрать строку" onClick={() => set({ rows: f.rows.length > 1 ? f.rows.filter((_, j) => j !== i) : [{ item: '', qty: '' }] })}>✕</button>
+                <button type="button" className="btn" aria-label="Убрать строку" onClick={() => set({ rows: f.rows.length > 1 ? f.rows.filter((_, j) => j !== i) : [{ item: '', qty: '' }] })}><Remove /></button>
               </div>
               {it && (
                 <>
@@ -132,9 +133,9 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
           )
         })}
         <div className="row">
-          <button type="button" className="btn" onClick={() => set({ rows: [...f.rows, { item: '', qty: '' }] })}>+ Позиция из КП</button>
+          <button type="button" className="btn" onClick={() => set({ rows: [...f.rows, { item: '', qty: '' }] })}><Add /> Позиция из КП</button>
           <label className="shot">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+            <Photo />
             Сфотографировать
             <input type="file" accept="image/*" capture="environment" multiple onChange={e => { addPhotos(e.target.files); e.target.value = '' }} />
           </label>
@@ -174,7 +175,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
               <div className="row">
                 <select value={e.category} onChange={ev => upd({ category: ev.target.value })} aria-label="Категория">{['Материал', 'Топливо', 'Доставка', 'Техника', 'Прочее'].map(c => <option key={c}>{c}</option>)}</select>
                 <input type="number" inputMode="numeric" placeholder="Сумма ₸" value={e.amount} onChange={ev => upd({ amount: ev.target.value })} aria-label="Сумма" />
-                <button type="button" className="btn" aria-label="Убрать расход" onClick={() => set({ exps: f.exps.filter((_, j) => j !== i) })}>✕</button>
+                <button type="button" className="btn" aria-label="Убрать расход" onClick={() => set({ exps: f.exps.filter((_, j) => j !== i) })}><Remove /></button>
               </div>
               <div className="row" style={{ marginTop: 6 }}>
                 <select value={e.funding} onChange={ev => upd({ funding: ev.target.value })} aria-label="Откуда деньги">
@@ -194,7 +195,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
             </div>
           )
         })}
-        <button type="button" className="btn" onClick={() => set({ exps: [...f.exps, emptyExp()] })}>+ Расход</button>
+        <button type="button" className="btn" onClick={() => set({ exps: [...f.exps, emptyExp()] })}><Add /> Расход</button>
       </div>
 
       {error && <div className="err" role="alert">{error}</div>}
@@ -207,7 +208,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
       {picker !== null && (
         <div className="sheet" role="dialog" aria-label="Выбор позиции">
           <div className="top">
-            <button type="button" className="btn" aria-label="Назад" onClick={() => setPicker(null)}>←</button>
+            <button type="button" className="btn" aria-label="Назад" onClick={() => setPicker(null)}><Back /></button>
             <input type="text" className="grow" placeholder="Найти позицию" autoComplete="off" value={q} onChange={e => setQ(e.target.value)} autoFocus />
           </div>
           <div className="list">

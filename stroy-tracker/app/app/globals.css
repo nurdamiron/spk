@@ -21,6 +21,8 @@
   --badbg: rgba(255, 59, 48, 0.13);
   --glass: rgba(249, 249, 249, 0.78);
   --r: 16px;
+  --c1: #007aff;
+  --c2: #e07000;
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-l: env(safe-area-inset-left, 0px);
@@ -45,6 +47,8 @@
     --bad: #ff453a;
     --badbg: rgba(255, 69, 58, 0.2);
     --glass: rgba(28, 28, 30, 0.78);
+    --c1: #0a84ff;
+    --c2: #e07000;
   }
 }
 
@@ -143,7 +147,7 @@ a.card { display: block; color: inherit; text-decoration: none; }
 .hint { background: var(--acbg); color: var(--ac); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin-bottom: 14px; }
 .err { color: var(--bad); font-size: 15px; margin: 6px 0 10px; }
 
-.bar { height: 6px; background: var(--fill); border-radius: 3px; overflow: hidden; }
+.bar { height: 8px; background: var(--fill); border-radius: 3px; overflow: hidden; }
 .bar i { display: block; height: 100%; background: var(--ac); border-radius: 3px; transition: width 0.3s; }
 
 /* ---------- таблицы ---------- */
@@ -162,6 +166,8 @@ input[type=number], input[type=date], input[type=text], input[type=tel], input[t
 }
 .card .line input, .card .line select { background: var(--card); }
 input[type=number] { width: 104px; }
+input[type=file] { padding: 6px; font-size: 15px; }
+input[type=file]::file-selector-button { border: 0; background: var(--ac); color: #fff; border-radius: 8px; padding: 8px 14px; margin-right: 12px; font: inherit; font-weight: 600; cursor: pointer; }
 input::placeholder { color: var(--tx2); opacity: 0.8; }
 input:focus-visible, select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 3px var(--acbg), 0 0 0 1.5px var(--ac); }
 input[type=checkbox] { width: 24px; height: 24px; flex: none; accent-color: var(--ac); }
@@ -257,6 +263,76 @@ summary::-webkit-details-marker { display: none; }
   .toast { bottom: 32px; }
   .opt:hover { background: var(--fill); }
 }
+
+/* ---------- главное число, полосы, списки ---------- */
+.hero { padding: 20px 18px; }
+.hero .l, .ofig .l, .stats .l { font-size: 13px; color: var(--tx2); font-weight: 500; letter-spacing: 0; }
+.hero .big { font-size: 56px; line-height: 1.05; font-weight: 700; letter-spacing: -0.045em; margin: 2px 0 2px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 16px; border-top: 0.5px solid var(--sep); padding-top: 14px; }
+.stats.two { grid-template-columns: repeat(2, 1fr); }
+.stats > div { padding: 0 12px; border-left: 0.5px solid var(--sep); min-width: 0; }
+.stats > div:first-child { padding-left: 0; border-left: 0; }
+.stats .n { font-size: 19px; font-weight: 650; letter-spacing: -0.03em; margin-top: 1px; white-space: nowrap; }
+.meterwrap { margin-top: 16px; }
+.meter { height: 8px; background: var(--fill); border-radius: 99px; overflow: hidden; }
+.meter.lg { height: 10px; }
+.meter i { display: block; height: 100%; background: var(--ac); border-radius: 99px; transition: width 0.4s ease; }
+.meter.bad i { background: var(--bad); }
+.meterlbl { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 13px; color: var(--tx2); }
+.otitle { font-size: 19px; font-weight: 650; letter-spacing: -0.02em; display: block; line-height: 1.25; }
+.ofig { display: flex; justify-content: space-between; align-items: flex-end; margin: 14px 0 10px; }
+.ofig .mid { font-size: 30px; font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; }
+.chev { color: var(--tx2); flex: none; opacity: 0.6; }
+.plist .prow { padding: 12px 0; border-top: 0.5px solid var(--sep); }
+.plist .prow:first-child { border-top: 0; padding-top: 2px; }
+.ptop { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; align-items: baseline; }
+.pname { font-size: 15.5px; font-weight: 550; line-height: 1.3; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.notstarted { margin-top: 10px; padding-top: 10px; }
+.pfig { font-weight: 650; font-variant-numeric: tabular-nums; flex: none; }
+.psub { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 13px; color: var(--tx2); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.lrow { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-top: 0.5px solid var(--sep); }
+.lrow:first-of-type { border-top: 0; padding-top: 0; }
+.jrow { display: flex; gap: 14px; align-items: center; }
+.jdate { flex: none; width: 48px; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.jbody { padding: 10px 0 2px 62px; font-size: 15px; line-height: 1.5; }
+summary.act { color: var(--ac); font-weight: 600; padding: 4px 0; }
+.card details:last-child { padding-bottom: 0; }
+
+/* график */
+.legend { display: flex; gap: 18px; font-size: 13px; color: var(--tx2); margin: -4px 0 8px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.dot.c1, .c1f { background: var(--c1); fill: var(--c1); }
+.dot.c2, .c2f { background: var(--c2); fill: var(--c2); }
+.chartbox { position: relative; }
+.chart svg { display: block; overflow: visible; max-width: 100%; }
+.chart .grid { stroke: var(--sep); stroke-width: 0.6; }
+.chart .axis { fill: var(--tx2); font-size: 11px; letter-spacing: 0; }
+.chart .ln { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.chart .c1s { stroke: var(--c1); }
+.chart .c2s { stroke: var(--c2); }
+.chart .mk { stroke: var(--card); stroke-width: 2.5; }
+.chart .dl { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.chart .c1t { fill: var(--c1); }
+.chart .c2t { fill: var(--c2); }
+.chart .cross { stroke: var(--tx2); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.6; }
+.tip { position: absolute; top: 0; pointer-events: none; background: var(--card); color: var(--tx); border-radius: 12px; padding: 9px 12px; font-size: 13px; line-height: 1.5; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18), 0 0 0 0.5px var(--sep); white-space: nowrap; z-index: 2; }
+.tip b { display: block; font-size: 13px; }
+.tview { border-top: 0; padding: 8px 0 0; }
+.tview summary { color: var(--tx2); font-size: 14px; }
+.tview table { margin-top: 6px; }
+
+/* ---------- стекло: подсветка кромки и запасные варианты ---------- */
+header, nav, .sheet .top { box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.55); }
+@media (prefers-color-scheme: dark) { header, nav, .sheet .top { box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.08); } }
+/* браузер не умеет размытие: делаем панели обычными, чтобы текст не терялся */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header, nav, .sheet .top { background: var(--card); }
+}
+/* человек просил меньше прозрачности в настройках телефона */
+@media (prefers-reduced-transparency: reduce) {
+  header, nav, .sheet .top { background: var(--card); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+.sig svg, .banner svg { flex: none; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

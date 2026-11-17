@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/session'
 import { NewObjectForm } from './NewObjectForm'
+import { Back } from '@/components/Icons'
 
 export default async function NewObjectPage() {
   await requireProfile(['owner'])
   return (
     <>
-      <Link href="/" className="btn">← Объекты</Link>
+      <Link href="/" className="btn"><Back />Объекты</Link>
       <h1>Новый объект</h1>
       <div className="card">
         <NewObjectForm />

@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { startupImages } from '@/lib/splash'
 
 export const metadata: Metadata = {
   title: 'Строй Трекер',
   description: 'Ежедневный учёт на объектах: выполнение и расходы',
   manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'Строй Трекер', statusBarStyle: 'default' },
+  appleWebApp: { capable: true, title: 'Строй Трекер', statusBarStyle: 'default', startupImage: startupImages },
   icons: { icon: '/icons/favicon-32.png', apple: '/icons/apple-touch-icon.png' },
   other: { 'mobile-web-app-capable': 'yes' },
 }

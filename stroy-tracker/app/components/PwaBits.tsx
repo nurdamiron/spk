@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import { flushQueue, listQueue } from '@/lib/queue'
+import { Close } from '@/components/Icons'
 
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<unknown> }
 
@@ -80,7 +81,7 @@ export function PwaBits() {
         <div className="banner info">
           <span className="grow">Поставьте приложение на экран телефона</span>
           <button className="btn" onClick={async () => { await install.prompt(); setInstall(null) }}>Установить</button>
-          <button className="btn" aria-label="Закрыть" onClick={hide}>✕</button>
+          <button className="btn" aria-label="Закрыть" onClick={hide}><Close /></button>
         </div>
       )}
       {!hidden && !install && ios && (
@@ -88,7 +89,7 @@ export function PwaBits() {
           <span className="grow">
             <b>Поставьте на экран Домой.</b> Нажмите «Поделиться» в Safari, затем «На экран Домой».
           </span>
-          <button className="btn" aria-label="Закрыть" onClick={hide}>✕</button>
+          <button className="btn" aria-label="Закрыть" onClick={hide}><Close /></button>
         </div>
       )}
       {toast && <div className="toast" role="status">{toast}</div>}

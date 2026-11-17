@@ -2,6 +2,7 @@ import { requireProfile } from '@/lib/session'
 import { admin } from '@/lib/supabase/admin'
 import { assignMember, setActive, unassignMember } from '../actions'
 import { UserForm } from './UserForm'
+import { Close } from '@/components/Icons'
 
 const ROLE = { owner: 'Владелец', foreman: 'Прораб', cashier: 'Кассир' } as const
 
@@ -39,7 +40,7 @@ export default async function TeamPage() {
                   {mine.map(m => (
                     <form key={m.object_id} action={unassignMember} className="row" style={{ marginBottom: 4 }}>
                       <input type="hidden" name="user_id" value={u.id} /><input type="hidden" name="object_id" value={m.object_id} />
-                      <span className="grow">{objName.get(m.object_id)}</span><button className="btn" aria-label="Убрать с объекта">✕</button>
+                      <span className="grow">{objName.get(m.object_id)}</span><button className="btn" aria-label="Убрать с объекта"><Close /></button>
                     </form>
                   ))}
                   <form action={assignMember} className="row">

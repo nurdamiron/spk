@@ -2,7 +2,7 @@
 // Страницы: сначала пробуем сеть 3 секунды, потом отдаём последнюю копию.
 // Скрипты, стили и значки: сразу из памяти телефона.
 // Запросы к серверу (api) и отправки никогда не кэшируем.
-const VERSION = 'st-app-v2'
+const VERSION = 'st-app-v3'
 const SHELL = ['/icons/icon-192.png', '/icons/icon-512.png', '/icons/apple-touch-icon.png', '/manifest.webmanifest']
 
 self.addEventListener('install', e => {
