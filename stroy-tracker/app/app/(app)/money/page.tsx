@@ -28,10 +28,10 @@ export default async function MoneyPage() {
     <>
       <h1>Бригады и деньги</h1>
 
-      <div className="card">
-        <h2>Подотчёт прорабов</h2>
+      <div className="sec"><h2>Подотчёт прорабов</h2></div>
+      <div className="group">
         {imprests.map(({ f, i }) => (
-          <div key={f.id} className="line">
+          <div key={f.id} className="gi">
             <div className="row"><b className="grow">{f.name}</b><span className="pill info">на руках {money(i.left)}</span></div>
             <div className="mut">Выдано {short(i.issued)} · возвращено {short(i.back)} · потрачено {short(i.spent)}{i.noReceipt > 0 && <span className="tc-bad"> · без чеков {short(i.noReceipt)}</span>}</div>
             <form action={addImprest} className="row" style={{ marginTop: 8 }}>
@@ -43,17 +43,17 @@ export default async function MoneyPage() {
             </form>
           </div>
         ))}
-        {!imprests.length && <p className="mut">Прорабов пока нет. Добавьте их на вкладке «Команда».</p>}
+        {!imprests.length && <p className="empty-hint">Прорабов пока нет. Добавьте их на вкладке «Команда».</p>}
       </div>
 
-      <div className="card">
-        <h2>Баланс по бригадам</h2>
+      <div className="sec"><h2>Баланс по бригадам</h2></div>
+      <div className="group">
         {(crews.data ?? []).map(c => {
           const a = acc.get(c.id) ?? 0
           const p = paid.get(c.id) ?? 0
           const debt = a - p
           return (
-            <div key={c.id} className="line">
+            <div key={c.id} className="gi">
               <div className="row"><b className="grow">{c.name}</b><span className={'pill ' + (debt < 0 ? 'bad' : 'ok')}>{debt < 0 ? 'переплата ' : 'долг '}{short(Math.abs(debt))}</span></div>
               <div className="mut">{objName.get(c.object_id)} · {RATE_LABEL[c.rate_type]} · начислено {short(a)} · выдано {short(p)}</div>
               <form action={addPayout} className="row" style={{ marginTop: 8 }}>
@@ -64,7 +64,7 @@ export default async function MoneyPage() {
             </div>
           )
         })}
-        {!(crews.data ?? []).length && <p className="mut">Бригад пока нет. Их добавляют на странице объекта.</p>}
+        {!(crews.data ?? []).length && <p className="empty-hint">Бригад пока нет. Их добавляют на странице объекта.</p>}
       </div>
     </>
   )

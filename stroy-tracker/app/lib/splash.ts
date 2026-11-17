@@ -7,7 +7,7 @@ const DEVICES: [number, number, number][] = [
 
 export const startupImages = DEVICES.flatMap(([w, h, k]) =>
   (['light', 'dark'] as const).map(theme => ({
-    url: `/splash/splash-${w}x${h}-${k}x-${theme}.png`,
+    url: `/splash/splash-${w}x${h}-${k}x-dark.png`,
     media:
       `(device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${k})` +
       ` and (orientation: portrait) and (prefers-color-scheme: ${theme})`,

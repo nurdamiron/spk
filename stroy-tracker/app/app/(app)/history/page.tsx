@@ -15,17 +15,24 @@ export default async function HistoryPage() {
   return (
     <>
       <h1>Мои отчёты</h1>
-      {(data ?? []).map((r: any) => (
-        <div key={r.id} className="card">
-          <div className="row">
-            <b className="grow">{dshort(r.report_date)} · {r.objects?.name}</b>
-            <span className={'pill ' + (r.backdated ? 'warn' : 'ok')}>{r.backdated ? 'задним числом' : 'отправлен'}</span>
+      <div className="group">
+        {(data ?? []).map((r: any) => (
+          <div key={r.id} className="gi">
+            <div className="jrow" style={{ alignItems: 'flex-start' }}>
+              <span className="jdate">{dshort(r.report_date)}</span>
+              <div className="grow">
+                <div className="row" style={{ flexWrap: 'nowrap' }}>
+                  <b className="grow">{r.objects?.name}</b>
+                  <span className={'pill ' + (r.backdated ? 'warn' : 'ok')}>{r.backdated ? 'задним числом' : 'отправлен'}</span>
+                </div>
+                {r.progress_entries.map((x: any, i: number) => <div key={i} style={{ marginTop: 4 }}>{x.kp_items?.name}: <b>{Number(x.qty)} {x.kp_items?.unit}</b></div>)}
+                {!r.progress_entries.length && <div className="mut">Выполнения нет</div>}
+                <div className="mut" style={{ marginTop: 6 }}>Людей: {r.labor_entries.length} · расходов: {r.expenses.length} · фото: {r.report_photos.length}</div>
+              </div>
+            </div>
           </div>
-          {r.progress_entries.map((x: any, i: number) => <div key={i}>• {x.kp_items?.name}: {Number(x.qty)} {x.kp_items?.unit}</div>)}
-          {!r.progress_entries.length && <div className="mut">Выполнения нет</div>}
-          <div className="mut">Людей: {r.labor_entries.length} · расходов: {r.expenses.length} · фото: {r.report_photos.length}</div>
-        </div>
-      ))}
+        ))}
+      </div>
       {!data?.length && <div className="card"><h2>Отчётов пока нет</h2><p className="mut">Первый отчёт вы отправите на вкладке «Отчёт».</p></div>}
     </>
   )

@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { enqueue, sendReport, shrinkPhoto } from '@/lib/queue'
-import { Add, Back, Photo, Remove } from '@/components/Icons'
+import { Check, Clock, Plus, Camera, X, Trash2 } from 'lucide-react'
+import { Back } from '@/components/Icons'
 
 type Item = { id: string; name: string; unit: string; qty: number; done: number }
 type CrewOpt = { id: string; name: string; type: 'hour' | 'day' | 'volume' | 'fixed'; on: boolean }
@@ -82,9 +83,10 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
 
   if (result) {
     return (
-      <div className="card">
+      <div className={'card done' + (result === 'queued' ? ' q' : '')}>
+        <div className="ic">{result === 'sent' ? <Check size={36} strokeWidth={2.5} /> : <Clock size={34} strokeWidth={2.2} />}</div>
         <h2>{result === 'sent' ? 'Отчёт отправлен' : 'Сохранено в телефоне'}</h2>
-        <p className="mut">{result === 'sent' ? 'Владелец уже видит цифры.' : 'Связи нет. Отчёт уйдёт сам, когда появится интернет. Приложение можно закрыть.'}</p>
+        <p className="mut" style={{ fontSize: 16 }}>{result === 'sent' ? 'Владелец уже видит цифры.' : 'Связи нет. Отчёт уйдёт сам, когда появится интернет. Приложение можно закрыть.'}</p>
         <div className="row">
           <button className="btn pri" onClick={() => { setF(fresh()); setResult(null) }}>Новый отчёт</button>
           <Link className="btn" href="/history">История</Link>
@@ -94,112 +96,125 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
   }
 
   const list = items.filter(i => i.name.toLowerCase().includes(q.trim().toLowerCase()))
+  const nProg = f.rows.filter(r => r.item && parseFloat(r.qty) > 0).length
+  const nPeople = f.people.filter(p => p.on).length
+  const nExp = f.exps.filter(e => parseFloat(e.amount) > 0).length
 
   return (
     <>
-      <div className="hint">Цен, себестоимости и прибыли здесь нет. Люди подставлены из прошлых отчётов.</div>
-      <div className="card">
-        <div className="row"><b className="grow">{props.objectName}</b><input type="date" value={f.date} max={props.today} onChange={e => set({ date: e.target.value })} aria-label="Дата отчёта" /></div>
-        <div className="row" style={{ marginTop: 6 }}>
-          <span className="pill info">В подотчёте на руках: {props.imprestLeft}</span>
+      <div className="card rhead">
+        <div className="obj">{props.objectName}</div>
+        <div className="meta">
+          <input type="date" value={f.date} max={props.today} onChange={e => set({ date: e.target.value })} aria-label="Дата отчёта" />
           {f.date !== props.today && <span className="pill warn">задним числом</span>}
+          <span className="pill info">В подотчёте: {props.imprestLeft}</span>
         </div>
       </div>
+      <div className="hint">Цен и прибыли здесь нет. Люди подставлены из прошлых отчётов.</div>
 
-      <div className="card">
-        <h2>1. Выполнение</h2>
+      <div className="sec"><span className="num">1</span><h2>Что сделали</h2></div>
+      <div className="group">
         {f.rows.map((r, i) => {
           const it = byId.get(r.item)
           const after = it ? it.done + (inForm.get(it.id) ?? 0) : 0
           return (
-            <div key={i} className="line">
-              <div className="row">
-                <button type="button" className={'pickbtn' + (it ? '' : ' empty')} onClick={() => { setQ(''); setPicker(i) }}>{it ? it.name : 'Выбрать позицию из КП…'}</button>
-                <input type="number" inputMode="decimal" placeholder="Объём" value={r.qty} aria-label="Объём"
+            <div key={i} className="gi">
+              <button type="button" className={'pick' + (it ? '' : ' empty')} onClick={() => { setQ(''); setPicker(i) }}>
+                <span className="t">{it ? it.name : 'Выбрать позицию из КП'}</span>
+              </button>
+              <div className="qtyrow">
+                <input type="number" inputMode="decimal" placeholder="0" value={r.qty} aria-label="Объём"
                   onChange={e => set({ rows: f.rows.map((x, j) => (j === i ? { ...x, qty: e.target.value } : x)) })} />
-                {it && <span>{it.unit}</span>}
-                <button type="button" className="btn" aria-label="Убрать строку" onClick={() => set({ rows: f.rows.length > 1 ? f.rows.filter((_, j) => j !== i) : [{ item: '', qty: '' }] })}><Remove /></button>
+                <span className="unit">{it ? it.unit : ''}</span>
+                <button type="button" className="btn" aria-label="Убрать строку" onClick={() => set({ rows: f.rows.length > 1 ? f.rows.filter((_, j) => j !== i) : [{ item: '', qty: '' }] })}><Trash2 size={20} /></button>
               </div>
               {it && (
                 <>
-                  <div className="mut" style={{ marginTop: 4 }}>
-                    Всего будет {Math.round(after * 10) / 10} из {it.qty} {it.unit}
-                    {after > it.qty && <> <span className="pill bad">больше КП, это доп. работа?</span></>}
+                  <div className="after">
+                    <span>Всего будет {Math.round(after * 10) / 10} из {it.qty} {it.unit}</span>
+                    {after > it.qty && <span className="pill bad">больше КП, это доп. работа?</span>}
                   </div>
-                  <div className="bar" style={{ marginTop: 4 }}><i style={{ width: Math.min(100, (after / it.qty) * 100) + '%' }} /></div>
+                  <div className={'meter' + (after > it.qty ? ' bad' : '')} style={{ marginTop: 6 }}><i style={{ width: Math.min(100, (after / it.qty) * 100) + '%' }} /></div>
                 </>
               )}
             </div>
           )
         })}
-        <div className="row">
-          <button type="button" className="btn" onClick={() => set({ rows: [...f.rows, { item: '', qty: '' }] })}><Add /> Позиция из КП</button>
-          <label className="shot">
-            <Photo />
-            Сфотографировать
-            <input type="file" accept="image/*" capture="environment" multiple onChange={e => { addPhotos(e.target.files); e.target.value = '' }} />
-          </label>
-        </div>
-        <div>{f.photos.map((p, i) => <span key={i} className="photo"><img src={p.url} alt={`Фото ${i + 1}`} /></span>)}</div>
+        <button type="button" className="addrow" onClick={() => set({ rows: [...f.rows, { item: '', qty: '' }] })}><Plus size={20} />Ещё позиция из КП</button>
+        <label className="shotbtn">
+          <Camera size={20} />Сфотографировать{f.photos.length > 0 && <span className="mut" style={{ marginLeft: 'auto' }}>{f.photos.length}</span>}
+          <input type="file" accept="image/*" capture="environment" multiple onChange={e => { addPhotos(e.target.files); e.target.value = '' }} />
+        </label>
+        {f.photos.length > 0 && (
+          <div className="thumbs">
+            {f.photos.map((p, i) => (
+              <span key={i} className="photo"><img src={p.url} alt={`Фото ${i + 1}`} />
+                <button type="button" aria-label="Убрать фото" onClick={() => set({ photos: f.photos.filter((_, j) => j !== i) })}><X size={14} /></button>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="card">
-        <h2>2. Люди и техника</h2>
-        {crews.length === 0 && <p className="mut">Владелец ещё не добавил бригады на этот объект.</p>}
+      <div className="sec"><span className="num">2</span><h2>Люди и техника</h2></div>
+      <div className="group">
+        {crews.length === 0 && <div className="empty-hint">Владелец ещё не добавил бригады на этот объект.</div>}
         {f.people.map((p, i) => {
           const c = crews[i]
+          const hasVal = c.type === 'hour' || c.type === 'day'
           return (
-            <div key={c.id} className="line row">
-              <label className="row grow">
-                <input type="checkbox" checked={p.on} onChange={e => set({ people: f.people.map((x, j) => (j === i ? { ...x, on: e.target.checked } : x)) })} />
-                <span>{c.name}<br /><span className="mut">{TYPE_LBL[c.type]}</span></span>
+            <div key={c.id} className="gi">
+              <label className="crew">
+                <span className="nm">{c.name}<br /><span className="mut">{TYPE_LBL[c.type]}</span></span>
+                <input type="checkbox" className="sw" checked={p.on} aria-label={c.name} onChange={e => set({ people: f.people.map((x, j) => (j === i ? { ...x, on: e.target.checked } : x)) })} />
               </label>
-              {c.type === 'hour' || c.type === 'day' ? (
-                <>
+              {p.on && hasVal && (
+                <div className="val">
                   <input type="number" inputMode="decimal" step={c.type === 'day' ? 0.5 : 1} value={p.val} aria-label={c.type === 'hour' ? 'Часы' : 'Дни'}
                     onChange={e => set({ people: f.people.map((x, j) => (j === i ? { ...x, val: e.target.value } : x)) })} />
-                  <span>{c.type === 'hour' ? 'ч' : 'дн.'}</span>
-                </>
-              ) : <span className="mut">считается из выполнения</span>}
+                  <span className="mut">{c.type === 'hour' ? 'часов' : 'дней'}</span>
+                </div>
+              )}
+              {p.on && !hasVal && <div className="mut" style={{ marginTop: 6 }}>Сумма посчитается из выполнения</div>}
             </div>
           )
         })}
       </div>
 
-      <div className="card">
-        <h2>3. Расходы</h2>
+      <div className="sec"><span className="num">3</span><h2>Расходы</h2></div>
+      <div className="group">
         {f.exps.map((e, i) => {
           const upd = (patch: Partial<Exp>) => set({ exps: f.exps.map((x, j) => (j === i ? { ...x, ...patch } : x)) })
           return (
-            <div key={i} className="line">
-              <div className="row">
-                <select value={e.category} onChange={ev => upd({ category: ev.target.value })} aria-label="Категория">{['Материал', 'Топливо', 'Доставка', 'Техника', 'Прочее'].map(c => <option key={c}>{c}</option>)}</select>
-                <input type="number" inputMode="numeric" placeholder="Сумма ₸" value={e.amount} onChange={ev => upd({ amount: ev.target.value })} aria-label="Сумма" />
-                <button type="button" className="btn" aria-label="Убрать расход" onClick={() => set({ exps: f.exps.filter((_, j) => j !== i) })}><Remove /></button>
+            <div key={i} className="gi">
+              <div className="qtyrow" style={{ marginTop: 0 }}>
+                <input type="number" inputMode="numeric" placeholder="Сумма, ₸" value={e.amount} onChange={ev => upd({ amount: ev.target.value })} aria-label="Сумма" />
+                <button type="button" className="btn" aria-label="Убрать расход" onClick={() => set({ exps: f.exps.filter((_, j) => j !== i) })}><Trash2 size={20} /></button>
               </div>
-              <div className="row" style={{ marginTop: 6 }}>
+              <div className="f2">
+                <select value={e.category} onChange={ev => upd({ category: ev.target.value })} aria-label="Категория">{['Материал', 'Топливо', 'Доставка', 'Техника', 'Прочее'].map(c => <option key={c}>{c}</option>)}</select>
                 <select value={e.funding} onChange={ev => upd({ funding: ev.target.value })} aria-label="Откуда деньги">
                   <option value="imprest">Из подотчёта</option><option value="office">Оплатил офис</option><option value="transfer">Перечисление</option>
                 </select>
                 <select value={e.esf ? '1' : '0'} onChange={ev => upd({ esf: ev.target.value === '1' })} aria-label="НДС">
-                  <option value="1">Есть ЭСФ с НДС</option><option value="0">Без НДС / без ЭСФ</option>
+                  <option value="1">Есть ЭСФ с НДС</option><option value="0">Без НДС, без ЭСФ</option>
                 </select>
                 <select value={e.item} onChange={ev => upd({ item: ev.target.value })} aria-label="Позиция">
                   <option value="">Общий расход</option>{items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
                 </select>
+                <input type="text" className="full" placeholder="Комментарий, например: труба ПЭ 110, 40 м" value={e.comment} onChange={ev => upd({ comment: ev.target.value })} />
               </div>
-              <div className="row" style={{ marginTop: 6 }}>
-                <input type="text" className="grow" placeholder="Комментарий, например: труба ПЭ 110, 40 м" value={e.comment} onChange={ev => upd({ comment: ev.target.value })} />
-                <label className="row"><input type="checkbox" checked={e.receipt} onChange={ev => upd({ receipt: ev.target.checked })} /> чек есть</label>
-              </div>
+              <label className="chk"><input type="checkbox" className="sw" checked={e.receipt} onChange={ev => upd({ receipt: ev.target.checked })} />Чек есть</label>
             </div>
           )
         })}
-        <button type="button" className="btn" onClick={() => set({ exps: [...f.exps, emptyExp()] })}><Add /> Расход</button>
+        {f.exps.length === 0 && <div className="empty-hint">Расходов за день нет. Добавьте, если что-то покупали.</div>}
+        <button type="button" className="addrow" onClick={() => set({ exps: [...f.exps, emptyExp()] })}><Plus size={20} />Добавить расход</button>
       </div>
 
       {error && <div className="err" role="alert">{error}</div>}
       <div className="stickybar">
+        <div className="sum">Выполнение: {nProg} · Людей: {nPeople} · Расходов: {nExp}</div>
         <button className="btn pri big" disabled={busy} onClick={submit}>
           {busy ? 'Отправляем…' : online ? 'Отправить отчёт' : 'Сохранить, отправится при связи'}
         </button>

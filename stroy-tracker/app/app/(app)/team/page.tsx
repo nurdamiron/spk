@@ -20,19 +20,19 @@ export default async function TeamPage() {
   return (
     <>
       <h1>Команда</h1>
+      <div className="sec"><h2>Добавить человека</h2></div>
       <div className="card">
-        <h2>Добавить человека</h2>
         <UserForm objects={objs} />
       </div>
 
-      <div className="card">
-        <h2>Все аккаунты</h2>
+      <div className="sec"><h2>Все аккаунты</h2></div>
+      <div className="group">
         {(users.data ?? []).map(u => {
           const mine = (members.data ?? []).filter(m => m.user_id === u.id)
           return (
-            <div key={u.id} className="line">
+            <div key={u.id} className="gi">
               <div className="row">
-                <b className="grow">{u.name}</b>
+                <span className="ava" aria-hidden="true">{u.name.slice(0, 1).toUpperCase()}</span><b className="grow">{u.name}</b>
                 <span className={'pill ' + (u.active ? 'ok' : 'bad')}>{u.active ? ROLE[u.role as keyof typeof ROLE] : 'доступ закрыт'}</span>
               </div>
               {u.role === 'foreman' && (

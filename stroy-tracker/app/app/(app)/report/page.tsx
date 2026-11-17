@@ -37,11 +37,8 @@ export default async function ReportPage({ searchParams }: { searchParams: Promi
     <>
       <h1>Отчёт за день</h1>
       {objs.length > 1 && (
-        <div className="card">
-          <div className="mut">Объект</div>
-          <div className="row" style={{ marginTop: 6 }}>
-            {objs.map(x => <a key={x.id} href={`/report?o=${x.id}`} className={'btn' + (x.id === obj.id ? ' pri' : '')}>{x.name}</a>)}
-          </div>
+        <div className="objtabs">
+          {objs.map(x => <a key={x.id} href={`/report?o=${x.id}`} className={x.id === obj.id ? 'on' : ''}>{x.name}</a>)}
         </div>
       )}
       <ReportForm
