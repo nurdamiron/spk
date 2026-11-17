@@ -37,3 +37,13 @@ price-base/.venv/bin/python price-base/scripts/make_agent_prompts.py
 - Снимки страниц `data/snapshots/` (~800 МБ) и `.pkl` в git не идут; хранятся только локально.
 - Классы A/B/C/D присваивает сборка, `price_base_KZ.xlsx` вручную не править.
 - Старые агентские выходы перед новым прогоном архивировать в `data/archive_<дата>/`.
+
+## Сайт: раздел «Цены» в Stroy Tracker (2026-11-17)
+Код: `stroy-tracker/app/app/(app)/prices/` (список позиций, карточка позиции, поставщики, карточка поставщика), доступ только у роли «Владелец».
+Таблицы Supabase: `price_positions`, `price_suppliers`, `price_records`, `price_meta` (схема `stroy-tracker/app/supabase/migrate_003_prices.sql`, RLS без политик).
+Обновить данные на сайте после пересборки базы:
+```bash
+price-base/.venv/bin/python price-base/scripts/export_json.py          # xlsx -> data/export/price_base.json
+cd stroy-tracker/app && node scripts/import_prices.mjs                 # перезаписывает только таблицы price_*
+```
+Код сайта ещё не задеплоен на Vercel и не закоммичен; данные уже лежат в общей базе Supabase.

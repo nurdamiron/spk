@@ -11,7 +11,7 @@
 **Запрещено:** раскрывать телефоны за кнопками, звонить/писать, оставлять заявки, обходить капчу, использовать закрытые базы.
 
 ## Порядок
-1. Открой `price-base/price_base_KZ.xlsx`, лист «Поставщики» (282 поставщиков). Используй **точное имя из колонки B** как `supplier_name`.
+1. Открой `price-base/price_base_KZ.xlsx`, лист «Поставщики» (609 поставщиков). Используй **точное имя из колонки B** как `supplier_name`.
 2. Приоритет: поставщики с наибольшим числом записей и оптовые/производители; затем остальные. Kaspi-объявления отдельных физлиц — в последнюю очередь (там чаще нет публичных контактов — так и отметь).
 3. Типизируй поставщика: производитель / официальный дилер / оптовая база / розница-маркетплейс / подрядчик (по сайту компании; сомневаешься — «не определён» и объяснение в `note`).
 4. Один объект на поставщика в `contacts_10_kontakty.json`; для каждого — `source_url` и `source_date` (дата просмотра), `note` (что не нашёл).
@@ -19,66 +19,66 @@
 ## Топ поставщиков по числу записей (для порядка работы)
 | ID | Название | Тип сейчас | Страница | Записей |
 |---|---|---|---|---|
-| S005 | TASYMA.KZ | розница-маркетплейс | https://satu.kz/c815110-tasymakz.html | 33 |
+| S037 | Трубное Решение (truboproduct.kz) | оптовая база | https://almaty.truboproduct.kz/price-list/ | 58 |
+| S047 | ma-metall.kz | оптовая база | https://ma-metall.kz/kontakty/ | 55 |
+| S005 | TASYMA.KZ | розница-маркетплейс | https://satu.kz/c815110-tasymakz.html | 47 |
+| S215 | КТК Актобе (kaztemirkontrakt.kz, склад «Актюбинскглавснаб») | оптовая база | https://kaztemirkontrakt.kz | 42 |
+| S216 | КТК Актау (kaztemirkontrakt.kz, база ТОО «Рекон-Актау») | оптовая база | https://kaztemirkontrakt.kz | 39 |
 | S049 | Монтаж PRO | розница-маркетплейс | https://satu.kz/c355750-montazh-pro.html | 23 |
-| S106 | "FG" First Garden  | не определён (проверить на стр | https://satu.kz/c513307-first-garden.html | 13 |
-| S017 | ТОО Rubilon-поставщик №1 | розница-маркетплейс | https://satu.kz/c839025-too-rubilon-postavschik.html | 12 |
+| S198 | ТОО "КТК трейд" | оптовая база | https://kaztemirkontrakt.kz/kontakty/almaty.html | 23 |
+| S390 | ТОО «Электротехника» (electrotechnika.kz) | оптовая база | https://electrotechnika.kz/company/ | 23 |
+| S017 | ТОО Rubilon-поставщик №1 | розница-маркетплейс | https://satu.kz/c839025-too-rubilon-postavschik.html | 22 |
+| S294 | ТОО «PLANTS COMPANY» | производитель | https://plants.kz | 18 |
+| S387 | ТОО «General Electrical Technology" | розница-маркетплейс | https://satu.kz/c70246-too-general-electrical.html | 18 |
+| S096 | Spectehnica.kz | подрядчик | https://spectehnica.kz | 16 |
+| S244 | ТОО ASBIX | розница-маркетплейс | https://satu.kz/c885025-too-asbix.html | 15 |
+| S068 | ТОО Nekei | розница-маркетплейс | https://satu.kz/c786491-too-nekei.html | 14 |
+| S283 | NST Engineering | розница-маркетплейс | https://satu.kz/c831079-nst-engineering.html | 14 |
+| S055 | TradeKZ - интернет-магазин | розница-маркетплейс | https://satu.kz/c186584-tradekz-internet-magazin.html | 13 |
+| S071 | САНТЕХКОМПЛЕКТ | розница-маркетплейс | https://satu.kz/c274417-santehkomplekt.html | 13 |
+| S106 | "FG" First Garden  | не определён | https://satu.kz/c513307-first-garden.html | 13 |
+| S472 | ТОО «МЕГАСТРОЙ АСТАНА DIY» (megastroy.kz) | розница-маркетплейс | https://megastroy.kz | 13 |
 | S069 | ТОО "MANSVALVE GROUP" | розница-маркетплейс | https://satu.kz/c850320-too-mansvalve-group.html | 12 |
 | S078 | ТОО КазГидроПром Групп | розница-маркетплейс | https://satu.kz/c526682-too-kazgidroprom-grupp.html | 12 |
+| S388 | ТОО «Алматы КазКабель» | розница-маркетплейс | https://satu.kz/c511840-too-almaty-kazkabel.html | 12 |
+| S546 | ИП Вечерковская Г.И. (Almaty Trans) | подрядчик | https://almatytrans.kz | 12 |
 | S058 | ТОО " MV Company Almaty " | розница-маркетплейс | https://satu.kz/c752817-too-company-almaty.html | 11 |
-| S071 | САНТЕХКОМПЛЕКТ | розница-маркетплейс | https://satu.kz/c274417-santehkomplekt.html | 11 |
-| S157 | Питомник PLANTS (plants.kz), Алматы | производитель (питомник) | https://plants.kz | 11 |
-| S055 | TradeKZ - интернет-магазин | розница-маркетплейс | https://satu.kz/c186584-tradekz-internet-magazin.html | 10 |
-| S096 | Spectehnica.kz | подрядчик (спецтехника) | https://spectehnica.kz | 10 |
+| S157 | Питомник PLANTS (plants.kz), Алматы | производитель | https://plants.kz | 11 |
+| S391 | Интернет-магазин  Lider_Stroy | розница-маркетплейс | https://satu.kz/c791264-internet-magazin-liderstroy.html | 11 |
+| S008 | QAZ-NUR | розница-маркетплейс | https://satu.kz/c714040-group.html | 10 |
 | S172 | ТОО «Асфальтобетон 1» | производитель | https://ab1.kz/price-list?id=15783 | 10 |
-| S239 | ТОО ASBIX | розница-маркетплейс | https://satu.kz/c885025-too-asbix.html | 10 |
+| S350 | ТОО "GOLD SERVICE KAZAKHSTAN" | розница-маркетплейс | https://satu.kz/c847182-too-gold-service.html | 10 |
+| S580 | СтройТакси Алматы (stroitaxi.kz) | подрядчик | https://stroitaxi.kz/almaty/ | 10 |
 | S006 | ТОО Прэвайд | розница-маркетплейс | https://satu.kz/c792034-too-prevajd.html | 9 |
-| S068 | ТОО Nekei | розница-маркетплейс | https://satu.kz/c786491-too-nekei.html | 9 |
-| S037 | Трубное Решение (truboproduct.kz) | оптовая база (трубы) | https://almaty.truboproduct.kz/price-list/ | 8 |
+| S016 | Ertas | розница-маркетплейс | https://satu.kz/c753878-ertas.html | 9 |
+| S347 | Alash agro | производитель | https://alashagro.kz/contact/ | 9 |
+| S348 | Global Prime Snab (GPSnab) | оптовая база | https://gpsnab.kz/kontakty/ | 9 |
+| S015 | STROYHOLDING.KZ | розница-маркетплейс | https://satu.kz/c820491-stroyholdingkz.html | 8 |
+| S041 | МетПромИнтекс | розница-маркетплейс | https://satu.kz/c228278-metprominteks.html | 8 |
 | S067 | ТОО "AUHAL" (АУХАЛ) | розница-маркетплейс | https://satu.kz/c234735-too-auhal-auhal.html | 8 |
 | S188 | ТОО «Алаш Сантех Строй» (Бетон.kz / АлматыБетон.kz) | оптовая база | https://xn--90aiydt.kz | 8 |
 | S007 | ТОО  "AS Delivery" | розница-маркетплейс | https://satu.kz/c189209-too-delivery.html | 7 |
-| S041 | МетПромИнтекс | розница-маркетплейс | https://satu.kz/c228278-metprominteks.html | 7 |
-| S047 | ma-metall.kz | оптовая база (металл) | https://ma-metall.kz/kontakty/ | 7 |
-| S156 | Питомник GreenMax (Талгарский р-н Алматинской обл.) | производитель (питомник) | https://www.greenmax.kz | 7 |
+| S030 | ТОО Армоснаб | розница-маркетплейс | https://satu.kz/c858565-too-armosnab.html | 7 |
+| S156 | Питомник GreenMax (Талгарский р-н Алматинской обл.) | производитель | https://www.greenmax.kz | 7 |
+| S223 | ТОО Стальметурал | розница-маркетплейс | https://satu.kz/c761332-too-stalmetural.html | 7 |
+| S295 | Питомник растений GreenMax | производитель | https://greenmax.kz | 7 |
+| S352 | Интернет-магазин BIST.kz | розница-маркетплейс | https://satu.kz/c177583-internet-magazin-bistkz.html | 7 |
 | S004 | MG Group | розница-маркетплейс | https://satu.kz/c714040-group.html | 6 |
-| S015 | STROYHOLDING.KZ | розница-маркетплейс | https://satu.kz/c820491-stroyholdingkz.html | 6 |
-| S107 | Питомник Жасыл бақ | не определён (проверить на стр | https://satu.kz/c190769-pitomnik-zhasyl-baq.html | 6 |
+| S107 | Питомник Жасыл бақ | не определён | https://satu.kz/c190769-pitomnik-zhasyl-baq.html | 6 |
 | S175 | Грузо Перевозки (gruzoperevoski.kz) | оптовая база | https://gruzoperevoski.kz/rekvizity.html | 6 |
 | S185 | ТОО «Бетон Строй Мастер» | производитель | https://bsm.kz | 6 |
-| S265 | ТОО «LAN TECH» | розница-маркетплейс | https://satu.kz/c42360-too-lan-tech.html | 6 |
-| S016 | Ertas | розница-маркетплейс | https://satu.kz/c753878-ertas.html | 5 |
-| S030 | ТОО Армоснаб | розница-маркетплейс | https://satu.kz/c858565-too-armosnab.html | 5 |
+| S199 | ТОО «Стальная Марка» (stalnayamarka.kz) | оптовая база | https://stalnayamarka.kz/ | 6 |
+| S209 | ТОО "Steelborg" | оптовая база | https://satu.kz/c843572-too-steelborg.html | 6 |
+| S276 | ТОО «LAN TECH» | розница-маркетплейс | https://satu.kz/c42360-too-lan-tech.html | 6 |
+| S290 | "МИР САНТЕХНИКИ" КОСТАНАЙ | розница-маркетплейс | https://satu.kz/c559785-mir-santehniki-kostanaj.html | 6 |
+| S353 | Plastherm | розница-маркетплейс | https://satu.kz/c848352-plastherm.html | 6 |
+| S392 | LinktechKZ LLP | розница-маркетплейс | https://satu.kz/c830515-linktechkz-llp.html | 6 |
+| S019 | Блоки и Плитка KZ | розница-маркетплейс | https://satu.kz/c511565-bloki-plitka.html | 5 |
+| S022 | R&A PARTNERS QAZAQSTAN | не определён | https://satu.kz/c737487-and-partners-qazaqstan.html | 5 |
 | S031 | ТОО Dostavkabetona | производитель | https://satu.kz/c518616-too-dostavkabetona.html | 5 |
 | S032 | MG Бетон | производитель | https://satu.kz/c761859-beton.html | 5 |
 | S059 | ТОО «JT Group» | розница-маркетплейс | https://satu.kz/c715744-too-group.html | 5 |
 | S062 | ТОО "Haiao" | розница-маркетплейс | https://satu.kz/c827945-too-haiao.html | 5 |
-| S066 | ТОО «ЭВЕРЕСТ МИГ» | розница-маркетплейс | https://satu.kz/c49725-too-everest-mig.html | 5 |
-| S097 | СК «СПЕКТР» (ilt.kz) | производитель/подрядчик (прове | https://ilt.kz | 5 |
-| S186 | GOLD BETON | производитель | https://goldbeton.kz | 5 |
-| S187 | ТОО «Ару Бетон» | производитель | https://arubeton.kz | 5 |
-| S191 | Kaspi-объявление: Kaspi-объявление: Бетон всех марок (114988443), Павлодар, продавец Айн (114988443) | подрядчик / частное объявление | https://obyavleniya.kaspi.kz/a/beton-vseh-marok-114988443 | 5 |
-| S193 | ТОО "Beton stand-ART" | производитель | https://satu.kz/c737496-too-beton-stand.html | 5 |
-| S199 | ТОО «Стальная Марка» (stalnayamarka.kz) | оптовая база | https://stalnayamarka.kz/ | 5 |
-| S234 | TOO "TechSnab Company" | розница-маркетплейс | https://satu.kz/c233876-too-techsnab-company.html | 5 |
-| S261 | ТОО "КазРосМетПром" | розница-маркетплейс | https://satu.kz/c313621-too-kazrosmetprom.html | 5 |
-| S008 | QAZ-NUR | розница-маркетплейс | https://satu.kz/c856956-qaz-nur.html | 4 |
-| S036 | РБУ БетонСервис (rbubeton.kz), Коксай | производитель (БРУ) | https://rbubeton.kz | 4 |
-| S044 | Юнистил (unisteel.kz) | оптовая база (металл) | https://unisteel.kz | 4 |
-| S070 | AVS Engineering | не определён (проверить на стр | https://satu.kz/c590466-avs-engineering.html | 4 |
-| S176 | ТОО "Курылыс-А ЛТД" | розница-маркетплейс | https://satu.kz/c131908-too-kurylys-ltd.html | 4 |
-| S181 | TasBeton (tasbeton.kz) | оптовая база | https://tasbeton.kz/ceny | 4 |
-| S194 | Жайык Бетон | производитель | https://satu.kz/c788424-zhajyk-beton.html | 4 |
-| S195 | ТОО "Бетон Актау" | производитель | https://satu.kz/c433486-too-beton-aktau.html | 4 |
-| S197 | Almaty Beton (almatybeton.com) | посредник/агрегатор | https://almatybeton.com | 4 |
-| S210 | Baikal Steel | оптовая база | https://flagma.kz/706613/products/ | 4 |
-| S249 | ТОО Доставка | розница-маркетплейс | https://satu.kz/c331052-too-dostavka.html | 4 |
-| S272 | NST Engineering | розница-маркетплейс | https://satu.kz/c831079-nst-engineering.html | 4 |
-| S277 | ТОО «TeploHeat» | розница-маркетплейс | https://satu.kz/c711763-too-teploheat.html | 4 |
-| S002 | TOO "АSFALTCOM.KZ" | оптовая база | https://satu.kz/c369198-too-asfaltcomkz.html | 3 |
-| S009 | ТОО "Kaz Stroy Montage" | розница-маркетплейс | https://satu.kz/c724601-too-kaz-stroy.html | 3 |
-| S010 | Казахстан Геосинт | производитель | https://satu.kz/c788755-kazahstan-geosint.html | 3 |
-| S011 | ТОО "ШтайнПром" | розница-маркетплейс | https://satu.kz/c380173-too-shtajnprom.html | 3 |
 
 (остальные — в листе «Поставщики»)
 
