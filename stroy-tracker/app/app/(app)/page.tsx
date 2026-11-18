@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import { requireProfile, homeFor } from '@/lib/session'
-import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import { loadObject } from '@/lib/data'
 import { calcObject, pct, short } from '@/lib/calc'
 import { todayAlmaty } from '@/lib/config'
@@ -13,7 +13,7 @@ export default async function Home() {
   const p = await requireProfile()
   if (p.role !== 'owner') redirect(homeFor(p.role))
 
-  const { data: objs } = await admin().from('objects').select('id, name, customer').neq('status', 'archived').order('created_at')
+  const { data: objs } = await (await getDb()).from('objects').select('id, name, customer').neq('status', 'archived').order('created_at')
   const today = todayAlmaty()
   const cards = await Promise.all(
     (objs ?? []).map(async o => {

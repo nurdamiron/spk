@@ -1,10 +1,10 @@
 import { requireProfile } from '@/lib/session'
-import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import { dshort } from '@/lib/calc'
 
 export default async function HistoryPage() {
   const p = await requireProfile(['foreman', 'owner'])
-  const { data } = await admin()
+  const { data } = await (await getDb())
     .from('reports')
     .select('id, report_date, backdated, objects(name), progress_entries(qty, kp_items(name, unit)), labor_entries(id), expenses(id), report_photos(id)')
     .eq('author_id', p.id)

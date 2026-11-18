@@ -1,16 +1,26 @@
 import 'server-only'
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { authClient } from '@/lib/supabase/server'
 import { admin } from '@/lib/supabase/admin'
+import { dbFor } from '@/lib/supabase/scope'
+import { DEMO_COOKIE, DEMO_ENABLED, DEMO_IDS, DEMO_NAMES, isDemoRole } from '@/lib/demo'
 
 export type Role = 'owner' | 'foreman' | 'cashier'
-export type Profile = { id: string; name: string; login: string; role: Role; active: boolean }
+export type Profile = { id: string; name: string; login: string; role: Role; active: boolean; demo?: boolean }
 
 export const getProfile = cache(async (): Promise<Profile | null> => {
   const s = await authClient()
   const { data } = await s.auth.getUser()
-  if (!data.user) return null
+  if (!data.user) {
+    // демо-вход: без пароля, учебные данные (схема demo)
+    if (DEMO_ENABLED) {
+      const role = (await cookies()).get(DEMO_COOKIE)?.value
+      if (isDemoRole(role)) return { id: DEMO_IDS[role], name: DEMO_NAMES[role], login: 'demo', role, active: true, demo: true }
+    }
+    return null
+  }
   const { data: p } = await admin().from('profiles').select('*').eq('id', data.user.id).maybeSingle()
   return (p as Profile | null) ?? null
 })
@@ -27,7 +37,7 @@ export const homeFor = (r: Role) => (r === 'owner' ? '/' : r === 'foreman' ? '/r
 
 /** Ids объектов, к которым есть доступ. Владелец видит все. */
 export async function objectIdsFor(p: Profile): Promise<string[]> {
-  const db = admin()
+  const db = dbFor(p)
   if (p.role === 'owner') {
     const { data } = await db.from('objects').select('id').neq('status', 'archived')
     return (data ?? []).map(x => x.id)

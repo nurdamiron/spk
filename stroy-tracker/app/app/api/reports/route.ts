@@ -22,6 +22,7 @@ export async function POST(req: Request) {
   const p = await getProfile()
   if (!p || !p.active) return fail('Нужно войти', 401)
   if (p.role !== 'foreman' && p.role !== 'owner') return fail('Нет доступа', 403)
+  if (p.demo) return NextResponse.json({ id: 'demo', demo: true }) // демо: отчёт принимаем, но не сохраняем и фото не грузим
 
   let body: Payload
   let photos: File[] = []

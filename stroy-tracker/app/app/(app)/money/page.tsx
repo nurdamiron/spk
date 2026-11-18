@@ -1,12 +1,12 @@
 import { requireProfile } from '@/lib/session'
-import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import { imprestFor } from '@/lib/data'
 import { money, RATE_LABEL, short } from '@/lib/calc'
 import { addImprest, addPayout } from '../actions'
 
 export default async function MoneyPage() {
   await requireProfile(['owner', 'cashier'])
-  const db = admin()
+  const db = await getDb()
   const [foremen, crews, labor, payouts, objects] = await Promise.all([
     db.from('profiles').select('id, name').eq('role', 'foreman').eq('active', true).order('name'),
     db.from('crews').select('id, name, rate_type, rate, object_id').order('name'),

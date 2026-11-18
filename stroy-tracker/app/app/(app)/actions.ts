@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import * as XLSX from 'xlsx'
 import { requireProfile } from '@/lib/session'
 import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
+import { DEMO_MSG } from '@/lib/demo'
 import { normalizeLogin, loginToEmail } from '@/lib/config'
 
 export type State = { error: string; ok?: string }
@@ -17,7 +19,8 @@ const refresh = () => revalidatePath('/', 'layout')
 
 /* ---------- объект из КП в Excel ---------- */
 export async function createObject(_: State, form: FormData): Promise<State> {
-  await requireProfile(['owner'])
+  const me = await requireProfile(['owner'])
+  if (me.demo) return bad(DEMO_MSG)
   const name = String(form.get('name') ?? '').trim()
   const customer = String(form.get('customer') ?? '').trim()
   const costPct = toNum(form.get('cost_pct') ?? 70)
@@ -55,7 +58,7 @@ export async function createObject(_: State, form: FormData): Promise<State> {
   if (!items.length) return bad('В файле не нашёл ни одной позиции с названием, единицей, объёмом и ценой')
   if (items.length > 500) return bad('В КП больше 500 позиций, это слишком много для одного объекта')
 
-  const db = admin()
+  const db = await getDb()
   const { data: o, error } = await db.from('objects').insert({ name, customer: customer || null }).select('id').single()
   if (error || !o) return bad('Не удалось создать объект')
   const { error: e2 } = await db.from('kp_items').insert(items.map(i => ({ ...i, object_id: o.id })))
@@ -69,31 +72,34 @@ export async function createObject(_: State, form: FormData): Promise<State> {
 
 /* ---------- бригады и выдачи ---------- */
 export async function addCrew(form: FormData) {
-  await requireProfile(['owner'])
+  const me = await requireProfile(['owner'])
+  if (me.demo) return
   const object_id = String(form.get('object_id'))
   const name = String(form.get('name') ?? '').trim()
   const rate_type = String(form.get('rate_type'))
   const rate = Math.round(toNum(form.get('rate')))
   const kp = String(form.get('kp_item_id') ?? '')
   if (!name || !['hour', 'day', 'volume', 'fixed'].includes(rate_type) || !(rate > 0)) return
-  await admin().from('crews').insert({ object_id, name, rate_type, rate, kp_item_id: kp || null })
+  await (await getDb()).from('crews').insert({ object_id, name, rate_type, rate, kp_item_id: kp || null })
   refresh()
 }
 
 export async function addPayout(form: FormData) {
   const p = await requireProfile(['owner', 'cashier'])
+  if (p.demo) return
   const amount = Math.round(toNum(form.get('amount')))
   if (!(amount > 0)) return
-  await admin().from('payouts').insert({ crew_id: String(form.get('crew_id')), amount, kind: 'advance', created_by: p.id })
+  await (await getDb()).from('payouts').insert({ crew_id: String(form.get('crew_id')), amount, kind: 'advance', created_by: p.id })
   refresh()
 }
 
 export async function addImprest(form: FormData) {
   const p = await requireProfile(['owner', 'cashier'])
+  if (p.demo) return
   const amount = Math.round(toNum(form.get('amount')))
   const kind = String(form.get('kind')) === 'return' ? 'return' : 'issue'
   if (!(amount > 0)) return
-  await admin().from('imprest_moves').insert({
+  await (await getDb()).from('imprest_moves').insert({
     holder_id: String(form.get('holder_id')), amount, kind,
     comment: String(form.get('comment') ?? '').trim() || null, created_by: p.id,
   })
@@ -102,7 +108,8 @@ export async function addImprest(form: FormData) {
 
 /* ---------- люди ---------- */
 export async function createUser(_: State, form: FormData): Promise<State> {
-  await requireProfile(['owner'])
+  const me = await requireProfile(['owner'])
+  if (me.demo) return bad(DEMO_MSG)
   const name = String(form.get('name') ?? '').trim()
   const password = String(form.get('password') ?? '')
   const role = String(form.get('role'))
@@ -128,6 +135,7 @@ export async function createUser(_: State, form: FormData): Promise<State> {
 
 export async function setActive(form: FormData) {
   const me = await requireProfile(['owner'])
+  if (me.demo) return
   const id = String(form.get('user_id'))
   if (id === me.id) return
   await admin().from('profiles').update({ active: form.get('active') === '1' }).eq('id', id)
@@ -135,7 +143,8 @@ export async function setActive(form: FormData) {
 }
 
 export async function assignMember(form: FormData) {
-  await requireProfile(['owner'])
+  const me = await requireProfile(['owner'])
+  if (me.demo) return
   const user_id = String(form.get('user_id'))
   const object_id = String(form.get('object_id'))
   if (!object_id) return
@@ -144,7 +153,8 @@ export async function assignMember(form: FormData) {
 }
 
 export async function unassignMember(form: FormData) {
-  await requireProfile(['owner'])
+  const me = await requireProfile(['owner'])
+  if (me.demo) return
   await admin().from('object_members').delete().eq('user_id', String(form.get('user_id'))).eq('object_id', String(form.get('object_id')))
   refresh()
 }

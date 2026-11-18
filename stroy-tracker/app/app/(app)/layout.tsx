@@ -2,6 +2,9 @@ import { requireProfile } from '@/lib/session'
 import { Nav, type NavLink } from '@/components/Nav'
 import { PwaBits } from '@/components/PwaBits'
 import { LogoutButton } from '@/components/LogoutButton'
+import Link from 'next/link'
+import { FlaskConical } from 'lucide-react'
+import './demo.css'
 
 const ROLE = { owner: 'Владелец', foreman: 'Прораб', cashier: 'Кассир' } as const
 
@@ -23,6 +26,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </header>
       <main>
         <PwaBits />
+        {p.demo && (
+          <div className="demobar" role="status">
+            <FlaskConical size={18} aria-hidden="true" />
+            <span>Демо: учебные данные, изменения не сохраняются. Поставщики и цены настоящие.</span>
+            <Link href="/login">Роль</Link>
+          </div>
+        )}
         {children}
       </main>
       <Nav links={links} />

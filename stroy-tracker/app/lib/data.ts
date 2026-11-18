@@ -1,11 +1,12 @@
 import 'server-only'
 import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import type { Crew, Item, Rep } from '@/lib/calc'
 
 const num = (x: unknown) => Number(x ?? 0)
 
 export async function loadObject(objectId: string) {
-  const db = admin()
+  const db = await getDb()
   const [obj, items, crews, reps, payouts] = await Promise.all([
     db.from('objects').select('*').eq('id', objectId).maybeSingle(),
     db.from('kp_items').select('*').eq('object_id', objectId).order('sort'),
@@ -37,7 +38,7 @@ export async function loadObject(objectId: string) {
 
 /** Подотчёт одного человека: выдано, потрачено из подотчёта, без чеков, на руках. */
 export async function imprestFor(holderId: string) {
-  const db = admin()
+  const db = await getDb()
   const [moves, exp] = await Promise.all([
     db.from('imprest_moves').select('amount, kind').eq('holder_id', holderId),
     db.from('expenses').select('amount, has_receipt, reports!inner(author_id)').eq('funding', 'imprest').eq('reports.author_id', holderId),

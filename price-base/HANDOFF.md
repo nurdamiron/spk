@@ -47,3 +47,10 @@ price-base/.venv/bin/python price-base/scripts/export_json.py          # xlsx ->
 cd stroy-tracker/app && node scripts/import_prices.mjs                 # перезаписывает только таблицы price_*
 ```
 Код сайта ещё не задеплоен на Vercel и не закоммичен; данные уже лежат в общей базе Supabase.
+
+## Демо-режим в Stroy Tracker (2026-11-18)
+Кнопки «Посмотреть демо» (Владелец, Прораб, Кассир) на странице входа: вход без пароля на учебные данные, цены и поставщики настоящие.
+- Учебные данные лежат в отдельной схеме Postgres `demo` (миграция `stroy-tracker/app/supabase/migrate_004_demo.sql`, схема открыта для API командой `alter role authenticator set pgrst.db_schemas`). Боевая схема `public` не затрагивается.
+- Заполнить или обновить: `cd stroy-tracker/app && node scripts/seed_demo.mjs` (даты считаются от сегодня).
+- Демо только для чтения: любые записи (отчёты, выдачи, объекты, люди) блокируются, фото не грузятся.
+- Выключить: переменная окружения `DEMO_ENABLED=0` на Vercel и передеплой.

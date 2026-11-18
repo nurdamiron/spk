@@ -1,5 +1,5 @@
 import { requireProfile, objectIdsFor } from '@/lib/session'
-import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import { imprestFor } from '@/lib/data'
 import { money } from '@/lib/calc'
 import { todayAlmaty } from '@/lib/config'
@@ -9,7 +9,7 @@ export default async function ReportPage({ searchParams }: { searchParams: Promi
   const p = await requireProfile(['foreman', 'owner'])
   const ids = await objectIdsFor(p)
   const { o } = await searchParams
-  const db = admin()
+  const db = await getDb()
   const { data: objs } = await db.from('objects').select('id, name').in('id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000']).order('created_at')
 
   if (!objs?.length) {

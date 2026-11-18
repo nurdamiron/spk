@@ -1,5 +1,5 @@
 import { requireProfile } from '@/lib/session'
-import { admin } from '@/lib/supabase/admin'
+import { db as getDb } from '@/lib/db'
 import { assignMember, setActive, unassignMember } from '../actions'
 import { UserForm } from './UserForm'
 import { Close } from '@/components/Icons'
@@ -8,7 +8,7 @@ const ROLE = { owner: 'Владелец', foreman: 'Прораб', cashier: 'К�
 
 export default async function TeamPage() {
   const me = await requireProfile(['owner'])
-  const db = admin()
+  const db = await getDb()
   const [users, objects, members] = await Promise.all([
     db.from('profiles').select('id, name, role, active').order('created_at'),
     db.from('objects').select('id, name').neq('status', 'archived').order('created_at'),
