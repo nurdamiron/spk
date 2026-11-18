@@ -6,20 +6,36 @@
 .pr-chip.on { background: var(--ac); color: #fff; }
 .pr-search { display: flex; gap: 8px; margin: 4px 0 12px; }
 .pr-search input[type=text] { flex: 1; min-width: 0; }
-.pr-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin: 0 0 14px; }
+.pr-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 0 0 14px; }
 .pr-stats div { background: var(--card); border-radius: 16px; padding: 12px 14px; }
 .pr-stats b { display: block; font-size: 22px; letter-spacing: -0.02em; }
 .pr-stats span { font-size: 13px; color: var(--tx2); }
 .pr-item { display: block; color: inherit; text-decoration: none; }
 .pr-price { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin-top: 4px; }
-.pr-kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; font-size: 14px; margin-top: 8px; }
+.pr-kv { display: grid; grid-template-columns: minmax(84px, 32%) 1fr; gap: 4px 12px; font-size: 14px; margin-top: 8px; }
 .pr-kv dt { color: var(--tx2); }
 .pr-kv dd { margin: 0; overflow-wrap: anywhere; }
 .pr-quote { margin-top: 8px; padding: 8px 10px; border-radius: 12px; background: var(--fill); font-size: 13px; color: var(--tx2); overflow-wrap: anywhere; }
-.pr-links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 14px; }
-.pr-links a { color: var(--ac); text-decoration: none; overflow-wrap: anywhere; }
+.pr-links { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 6px; font-size: 15px; }
+.pr-links a { color: var(--ac); text-decoration: none; overflow-wrap: anywhere; display: inline-flex; align-items: center; min-height: 40px; }
 .pr-pager { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin: 16px 0; }
 .pr-note { font-size: 13px; color: var(--tx2); margin: 6px 4px 12px; }
 .pr-sub { display: flex; gap: 8px; margin: 0 0 10px; }
 .pr-sub a { flex: 1; text-align: center; padding: 9px 12px; border-radius: 12px; background: var(--fill); color: var(--tx); text-decoration: none; font-weight: 600; font-size: 15px; }
 .pr-sub a.on { background: var(--ac); color: #fff; }
+
+/* телефон: чипы и подзаголовки удобно нажимать, формы не вылезают за экран */
+.pr-chip { min-height: 38px; display: inline-flex; align-items: center; }
+.pr-sub a { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.pr-search .btn { flex: none; }
+.pr-item .row { align-items: flex-start; }
+.group .gi .row b.grow { overflow-wrap: anywhere; }
+@media (min-width: 560px) { .pr-stats { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) {
+  .pr-chips { flex-wrap: wrap; overflow: visible; }
+  .pr-kv { grid-template-columns: 200px 1fr; }
+}
+@media (max-width: 380px) {
+  .pr-price { font-size: 17px; }
+  .pr-sub a { font-size: 14px; padding: 8px; }
+}
