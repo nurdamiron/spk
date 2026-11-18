@@ -1,41 +1,174 @@
-/* Раздел «Цены»: только расширения к общим стилям */
-.pill.mute { background: var(--fill); color: var(--tx2); }
-.pr-chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 10px; scrollbar-width: none; }
-.pr-chips::-webkit-scrollbar { display: none; }
-.pr-chip { flex: none; padding: 7px 13px; border-radius: 99px; background: var(--fill); color: var(--tx); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.pr-chip.on { background: var(--ac); color: #fff; }
-.pr-search { display: flex; gap: 8px; margin: 4px 0 12px; }
-.pr-search input[type=text] { flex: 1; min-width: 0; }
-.pr-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 0 0 14px; }
-.pr-stats div { background: var(--card); border-radius: 16px; padding: 12px 14px; }
-.pr-stats b { display: block; font-size: 22px; letter-spacing: -0.02em; }
-.pr-stats span { font-size: 13px; color: var(--tx2); }
-.pr-item { display: block; color: inherit; text-decoration: none; }
-.pr-price { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin-top: 4px; }
-.pr-kv { display: grid; grid-template-columns: minmax(84px, 32%) 1fr; gap: 4px 12px; font-size: 14px; margin-top: 8px; }
-.pr-kv dt { color: var(--tx2); }
-.pr-kv dd { margin: 0; overflow-wrap: anywhere; }
-.pr-quote { margin-top: 8px; padding: 8px 10px; border-radius: 12px; background: var(--fill); font-size: 13px; color: var(--tx2); overflow-wrap: anywhere; }
-.pr-links { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 6px; font-size: 15px; }
-.pr-links a { color: var(--ac); text-decoration: none; overflow-wrap: anywhere; display: inline-flex; align-items: center; min-height: 40px; }
-.pr-pager { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin: 16px 0; }
-.pr-note { font-size: 13px; color: var(--tx2); margin: 6px 4px 12px; }
-.pr-sub { display: flex; gap: 8px; margin: 0 0 10px; }
-.pr-sub a { flex: 1; text-align: center; padding: 9px 12px; border-radius: 12px; background: var(--fill); color: var(--tx); text-decoration: none; font-weight: 600; font-size: 15px; }
-.pr-sub a.on { background: var(--ac); color: #fff; }
+/* Раздел «Цены»: телефон прежде всего. Расширения к общим стилям приложения. */
+.pv { padding-bottom: 8px; }
+.pv h1 { font-size: 26px; line-height: 1.15; margin: 6px 2px 12px; letter-spacing: -0.025em; overflow-wrap: anywhere; }
+.pv svg { flex: none; }
+.pv .grow { flex: 1; min-width: 0; }
+.pv .mut { color: var(--tx2); }
+.pv .tok { color: var(--ok); }
+.pv .mutc { color: var(--tx2); }
+.pv .dot { display: none; }
+.oc-sub svg { margin-left: 8px; }
 
-/* телефон: чипы и подзаголовки удобно нажимать, формы не вылезают за экран */
-.pr-chip { min-height: 38px; display: inline-flex; align-items: center; }
-.pr-sub a { min-height: 44px; display: flex; align-items: center; justify-content: center; }
-.pr-search .btn { flex: none; }
-.pr-item .row { align-items: flex-start; }
-.group .gi .row b.grow { overflow-wrap: anywhere; }
-@media (min-width: 560px) { .pr-stats { grid-template-columns: repeat(4, 1fr); } }
+/* верх страницы: назад + раздел + статус */
+.ph { display: flex; align-items: center; gap: 10px; margin: 2px 0 4px; font-size: 14px; }
+.ph-back { width: 42px; height: 42px; border-radius: 13px; background: var(--fill); color: var(--tx); display: grid; place-items: center; text-decoration: none; }
+
+/* переключатель Позиции / Поставщики */
+.seg { display: flex; background: var(--fill); border-radius: 14px; padding: 3px; margin: 0 0 12px; }
+.seg a { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; border-radius: 11px; color: var(--tx2); text-decoration: none; font-weight: 600; font-size: 15px; }
+.seg a.on { background: var(--card2); color: var(--tx); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+
+/* сводка цифр */
+.strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.strip > div { background: var(--card); border-radius: 16px; padding: 10px 11px; display: flex; align-items: center; gap: 9px; min-width: 0; }
+.strip svg { color: var(--ac); }
+.strip span { display: flex; flex-direction: column; font-size: 11.5px; color: var(--tx2); line-height: 1.15; min-width: 0; }
+.strip b { font-size: 18px; color: var(--tx); letter-spacing: -0.02em; }
+
+/* поиск, липкий под шапкой */
+.sb { position: sticky; top: calc(52px + var(--safe-t)); z-index: 4; margin: 0 -6px 8px; padding: 6px; background: var(--bg); }
+.sb-field { display: flex; align-items: center; gap: 9px; background: var(--fill); border-radius: 14px; padding: 0 6px 0 13px; min-height: 48px; }
+.sb-field svg { color: var(--tx2); }
+.sb-field input[type=text] { flex: 1; min-width: 0; width: 100%; background: transparent; border: 0; box-shadow: none; padding: 0; min-height: 46px; font-size: 16px; }
+.sb-field input[type=text]:focus-visible { box-shadow: none; }
+.sb-x { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: var(--tx2); text-decoration: none; }
+
+/* общее правило приложения добавляет details отступы и линию: в разделе «Цены» они не нужны */
+.pv details { padding: 0; border-top: 0; }
+.pv details:first-of-type { border-top: 0; }
+
+/* фильтры раскрывашкой */
+.flt, .info2, .cs, .oc-more { --chev: 0deg; }
+.flt { background: var(--card); border-radius: 16px; margin-bottom: 10px; }
+.flt > summary, .info2 > summary, .cs > summary, .oc-more > summary { list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.flt > summary::-webkit-details-marker, .info2 > summary::-webkit-details-marker, .cs > summary::-webkit-details-marker, .oc-more > summary::-webkit-details-marker { display: none; }
+.flt > summary { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 14px; font-weight: 600; font-size: 15.5px; }
+.flt-n { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; background: var(--ac); color: #fff; font-size: 12.5px; display: inline-grid; place-items: center; }
+.flt-chev { color: var(--tx2); transition: transform 0.2s; }
+details[open] > summary > .flt-chev, details[open] > summary > svg:last-child.flt-chev { transform: rotate(180deg); }
+.flt-body { padding: 0 12px 14px; }
+.flt-t { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tx2); margin: 12px 2px 8px; }
+.flt-chips, .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chips { margin-bottom: 12px; }
+.fc { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 13px; border-radius: 99px; background: var(--fill); color: var(--tx); font-size: 14.5px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.fc i { font-style: normal; font-size: 12px; color: var(--tx2); font-weight: 500; }
+.fc.on { background: var(--ac); color: #fff; }
+.fc.on i { color: rgba(255, 255, 255, 0.8); }
+.fc svg { opacity: 0.85; }
+.tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 10px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 9px 0 11px; border-radius: 99px; background: var(--acbg); color: var(--ac); font-size: 13.5px; font-weight: 600; text-decoration: none; }
+
+/* «как читать» */
+.info2 { background: var(--card); border-radius: 16px; margin-bottom: 12px; }
+.info2 > summary { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 14px; font-size: 14.5px; color: var(--tx2); font-weight: 600; }
+.info2 > summary .flt-chev { margin-left: auto; }
+.info2 ul { list-style: none; margin: 0; padding: 0 14px 4px; display: grid; gap: 10px; }
+.info2 li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; font-size: 13.5px; color: var(--tx2); }
+.info2 p { margin: 6px 14px 14px; font-size: 13px; color: var(--tx2); }
+
+/* значки классов и свежести */
+.cb { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 7px; border-radius: 99px; font-size: 12.5px; font-weight: 600; white-space: nowrap; line-height: 1.3; background: var(--fill); color: var(--tx2); }
+.cb svg { width: 14px; height: 14px; }
+.cb-A, .ab-actual { background: var(--okbg); color: var(--ok); }
+.cb-B, .ab-stale { background: var(--warnbg); color: var(--warn); }
+.cb-C { background: var(--acbg); color: var(--ac); }
+.ab-expired { background: var(--badbg); color: var(--bad); }
+.cb-D, .ab-nodate { background: var(--fill); color: var(--tx2); }
+
+/* список позиций и поставщиков */
+.pcs { background: var(--card); border-radius: 20px; overflow: hidden; margin-bottom: 4px; }
+.pc, .sr-main { display: flex; align-items: center; gap: 12px; padding: 13px 14px; color: inherit; text-decoration: none; min-width: 0; }
+.pc { min-height: 72px; }
+.pc + .pc, .sr + .sr, .pc + .sr, .sr + .pc { border-top: 0.5px solid var(--sep); }
+.pc:active, .sr-main:active { background: var(--fill); }
+.pc-ic { width: 40px; height: 40px; border-radius: 13px; background: var(--acbg); color: var(--ac); display: grid; place-items: center; flex: none; }
+.pc-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.pc-name { font-size: 15.5px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pc-meta { font-size: 12.5px; color: var(--tx2); display: flex; flex-wrap: wrap; align-items: center; gap: 3px 8px; line-height: 1.3; }
+.pc-meta > span:not(.cb) { white-space: nowrap; }
+.pc-meta .mini { background: var(--fill); padding: 1px 8px; border-radius: 99px; font-size: 12px; }
+.pc-price { flex: none; max-width: 40%; text-align: right; display: flex; flex-direction: column; gap: 2px; }
+.pc-price b { font-size: 16px; letter-spacing: -0.02em; white-space: nowrap; }
+.pc-price small { font-size: 11.5px; color: var(--tx2); line-height: 1.2; }
+.pc-chev { width: 16px; height: 16px; color: var(--tx2); opacity: 0.55; }
+.sr { display: flex; align-items: stretch; }
+.sr-main { flex: 1; padding-right: 6px; }
+.sr-call { width: 54px; flex: none; display: grid; place-items: center; color: var(--ac); border-left: 0.5px solid var(--sep); text-decoration: none; }
+.sr-call.off { color: var(--tx2); opacity: 0.3; }
+
+/* страница позиции: главная карточка */
+.hero2 { background: var(--card); border-radius: 22px; padding: 16px; margin-bottom: 12px; }
+.h2-l { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2); font-weight: 600; }
+.h2-big { margin-top: 6px; font-size: 36px; line-height: 1.05; font-weight: 700; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+.h2-big small { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 500; letter-spacing: 0; color: var(--tx2); }
+.h2-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.h2-stats > div { background: var(--fill); border-radius: 14px; padding: 10px 11px; min-width: 0; }
+.h2-stats b { display: block; font-size: 18px; letter-spacing: -0.02em; }
+.h2-stats span { font-size: 11.5px; color: var(--tx2); }
+
+/* группы предложений по классам */
+.cs { margin-bottom: 12px; }
+.cs > summary { display: flex; align-items: center; gap: 9px; min-height: 46px; padding: 0 4px; font-weight: 600; font-size: 15.5px; }
+.cnt { min-width: 26px; height: 24px; padding: 0 8px; border-radius: 99px; background: var(--fill); color: var(--tx2); font-size: 13px; display: inline-grid; place-items: center; }
+
+/* карточка предложения */
+.oc { background: var(--card); border-radius: 20px; padding: 14px; margin-bottom: 10px; }
+.oc-sup { display: flex; gap: 11px; min-width: 0; }
+.oc-ic { width: 38px; height: 38px; border-radius: 12px; background: var(--fill); color: var(--tx2); display: grid; place-items: center; flex: none; }
+.oc-A .oc-ic { background: var(--okbg); color: var(--ok); }
+.oc-t { min-width: 0; flex: 1; }
+.oc-name { font-size: 16px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.oc-name a { color: var(--tx); text-decoration: none; }
+.oc-sub { margin-top: 3px; font-size: 12.5px; color: var(--tx2); display: flex; align-items: center; flex-wrap: wrap; gap: 2px 3px; }
+.oc-sub a { color: var(--ac); text-decoration: none; }
+.oc-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 12px 0 2px; }
+.oc-price b { font-size: 26px; letter-spacing: -0.035em; line-height: 1.1; }
+.oc-price span { font-size: 13px; color: var(--tx2); }
+.oc-site { font-size: 12.5px; color: var(--tx2); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.oc-src { display: inline-flex; align-items: center; gap: 4px; color: var(--ac); text-decoration: none; min-height: 28px; }
+.oc-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.oc-act { display: flex; gap: 8px; margin-top: 12px; }
+.ab { min-height: 46px; min-width: 46px; padding: 0 13px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--fill); color: var(--tx); text-decoration: none; font-weight: 600; font-size: 15.5px; }
+.ab:active { filter: brightness(1.15); }
+.ab svg { width: 20px; height: 20px; }
+.ab-main { flex: 1; background: var(--ac); color: #fff; }
+.ab-wa { background: rgba(37, 211, 102, 0.18); color: #25d366; }
+.ab-none { flex: 1; color: var(--tx2); font-weight: 500; font-size: 14px; }
+.ab.off { opacity: 0.3; }
+
+/* «Подробнее» */
+.pv .oc-more { margin-top: 10px; border-top: 0.5px solid var(--sep); }
+.oc-more > summary { display: flex; align-items: center; justify-content: space-between; min-height: 44px; font-size: 14px; color: var(--tx2); font-weight: 600; }
+.oc-more > summary svg { transition: transform 0.2s; }
+.oc-more[open] > summary svg { transform: rotate(180deg); }
+.kv { display: grid; grid-template-columns: 92px 1fr; gap: 7px 10px; margin: 2px 0 0; font-size: 13.5px; }
+.kv dt { color: var(--tx2); }
+.kv dd { margin: 0; overflow-wrap: anywhere; }
+.quote { display: flex; gap: 8px; margin-top: 10px; padding: 9px 11px; border-radius: 12px; background: var(--fill); font-size: 12.5px; line-height: 1.4; color: var(--tx2); overflow-wrap: anywhere; }
+.quote svg { margin-top: 1px; }
+.cl { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+.cl li { display: flex; align-items: flex-start; gap: 10px; min-height: 36px; padding: 6px 0; font-size: 14.5px; color: var(--tx2); overflow-wrap: anywhere; }
+.cl li svg { margin-top: 2px; color: var(--tx2); }
+.cl a { color: var(--ac); text-decoration: none; }
+
+/* листание */
+.pg { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 6px; font-size: 14px; }
+.pg .ab { min-width: 56px; }
+
+/* широкий экран */
 @media (min-width: 900px) {
-  .pr-chips { flex-wrap: wrap; overflow: visible; }
-  .pr-kv { grid-template-columns: 200px 1fr; }
+  .pv h1 { font-size: 30px; }
+  .sb { top: 0; }
+  .flt-body .flt-chips { gap: 8px; }
+  .pc:hover, .sr-main:hover { background: var(--fill); }
+  .ab:hover { filter: brightness(1.12); }
+  .ab-main { max-width: 320px; }
 }
-@media (max-width: 380px) {
-  .pr-price { font-size: 17px; }
-  .pr-sub a { font-size: 14px; padding: 8px; }
+/* очень узкие телефоны */
+@media (max-width: 360px) {
+  .strip { grid-template-columns: repeat(3, 1fr); }
+  .strip svg { display: none; }
+  .h2-big { font-size: 30px; }
+  .oc-price b { font-size: 23px; }
+  .pc-price { max-width: 44%; }
 }

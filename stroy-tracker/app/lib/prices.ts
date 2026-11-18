@@ -63,3 +63,54 @@ export function parseContacts(raw: string | null | undefined): Contacts {
   return out
 }
 export const telHref = (p: string) => 'tel:' + p.replace(/[^\d+]/g, '')
+
+// ---------- Отображение для телефона ----------
+
+/** Короткие названия групп, чтобы заголовки не занимали пол-экрана. */
+export const GROUP_SHORT: Record<string, string> = {
+  'Дорожные и нерудные материалы': 'Дороги и нерудка',
+  'Бетон': 'Бетон',
+  'Металл, прокат, трубы': 'Металл и трубы',
+  'ЖБИ, плитка, благоустройство (изделия)': 'ЖБИ и плитка',
+  'Гидроизоляция, утеплитель': 'Гидроизоляция',
+  'Оборудование и арматура НС/ВК/ПТ': 'Оборудование',
+  'Озеленение (растения, газон)': 'Озеленение',
+  'Работы и услуги': 'Работы',
+  'Электрика и слаботочные системы': 'Электрика',
+  'Трубы и фитинги инженерных сетей': 'Сети и фитинги',
+  'Спецтехника и транспорт (аренда)': 'Спецтехника',
+  'Общестроительные и отделочные материалы': 'Общестрой',
+}
+export const groupShort = (g: string | null | undefined) => (g ? GROUP_SHORT[g] ?? g : 'Прочее')
+
+/** «₸/м³ (₸/рейс ÷ вместимость)» в «м³»; «₸/т» в «т». */
+export function shortUnit(u: string | null | undefined): string {
+  if (!u) return 'ед.'
+  const first = u.split(/\s*\(/)[0].trim()
+  return first.replace(/^₸\s*\/\s*/, '') || 'ед.'
+}
+
+/** Тип поставщика в одну категорию для значка. */
+export type TypeKind = 'maker' | 'dealer' | 'shop' | 'contractor' | 'unknown'
+export function typeKind(t: string | null | undefined): TypeKind {
+  const s = (t ?? '').toLowerCase()
+  if (s.includes('производ')) return 'maker'
+  if (s.includes('оптов') || s.includes('дилер') || s.includes('база')) return 'dealer'
+  if (s.includes('подряд')) return 'contractor'
+  if (s.includes('розниц') || s.includes('маркетплейс')) return 'shop'
+  return 'unknown'
+}
+export const TYPE_LABEL: Record<TypeKind, string> = { maker: 'Производитель', dealer: 'База или дилер', shop: 'Магазин', contractor: 'Подрядчик', unknown: 'Тип не определён' }
+
+/** Короткая дата: 16.11.26 */
+export const dmyShort = (d: string | null | undefined) => {
+  const m = /^(\d{4})-(\d\d)-(\d\d)/.exec(d ?? '')
+  return m ? `${m[3]}.${m[2]}.${m[1].slice(2)}` : ''
+}
+
+/** Номер для WhatsApp: только казахстанские мобильные +7 7xx. */
+export function waHref(p: string): string | null {
+  const d = p.replace(/[^\d]/g, '')
+  const n = d.length === 11 && (d.startsWith('7') || d.startsWith('8')) ? '7' + d.slice(1) : d.length === 10 ? '7' + d : ''
+  return n.startsWith('77') && n.length === 11 ? `https://wa.me/${n}` : null
+}
