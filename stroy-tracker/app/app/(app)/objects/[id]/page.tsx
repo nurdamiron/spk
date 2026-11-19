@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { ChartLine, ChevronDown, ClipboardList, TriangleAlert, Users } from 'lucide-react'
 import { requireProfile } from '@/lib/session'
 import { loadObject, signPhotos } from '@/lib/data'
 import { calcObject, crewBalance, dshort, expCost, money, pct, RATE_LABEL, short } from '@/lib/calc'
@@ -8,6 +9,7 @@ import { objectStatus } from '@/lib/status'
 import { Chart } from '@/components/Chart'
 import { Back, SigIcon } from '@/components/Icons'
 import { addCrew } from '../../actions'
+import './object.css'
 
 export default async function ObjectPage({ params }: { params: Promise<{ id: string }> }) {
   await requireProfile(['owner'])
@@ -22,45 +24,38 @@ export default async function ObjectPage({ params }: { params: Promise<{ id: str
   const crewName = new Map(d.crews.map(x => [x.id, x.name]))
   const profitCls = c.profit < 0 ? 'tc-bad' : 'tc-ok'
 
+  const attention = c.sigs.filter(x => x.kind !== 'info').length
+  const doneRows = c.rows.filter(r => r.q > 0)
+
   return (
-    <>
+    <div className="ob">
       <div className="row" style={{ justifyContent: 'space-between' }}>
         <Link href="/" className="btn"><Back />Объекты</Link>
         <span className={'pill ' + k}>{label}</span>
       </div>
       <h1>{d.obj.name}</h1>
-      <p className="mut" style={{ margin: '-4px 2px 16px' }}>{d.obj.customer} · договор {money(c.contract)} без НДС</p>
+      {d.obj.customer && <p className="mut sub">{d.obj.customer}</p>}
 
-      {/* главное число экрана */}
+      {/* главное: прибыль и сколько сделано */}
       <section className="card hero">
         <div className="l">Прибыль сейчас</div>
-        <div className={'big ' + profitCls}>{short(c.profit)}</div>
-        <div className="mut">маржа {pct(c.margin)}, по плану {pct(c.planMargin)}</div>
+        <div className={'big2 ' + profitCls}>{short(c.profit)}</div>
         <div className="meterwrap">
           <div className="meter lg"><i style={{ width: Math.min(100, c.ready * 100) + '%' }} /></div>
-          <div className="meterlbl"><span>Выполнено {pct(c.ready)} договора</span><span>{short(c.osv)} из {short(c.contract)}</span></div>
+          <div className="meterlbl"><span>Выполнено {pct(c.ready)}</span><span>{short(c.osv)} из {short(c.contract)}</span></div>
         </div>
-        <div className="stats">
-          <div><div className="l">Освоено</div><div className="n">{short(c.osv)}</div></div>
-          <div><div className="l">Потрачено</div><div className="n">{short(c.spent)}</div></div>
-          <div><div className="l">Прогноз прибыли</div><div className={'n ' + (c.fcProfit < 0 ? 'tc-bad' : '')}>{short(c.fcProfit)}</div></div>
-        </div>
-        {c.finishDate && <div className="mut" style={{ marginTop: 10 }}>Закончим примерно {c.finishDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })} при текущем темпе. Прогноз маржи {pct(c.fcMargin)}.</div>}
+        <div className="two"><span>Потрачено <b>{short(c.spent)}</b></span><span>Маржа <b>{pct(c.margin)}</b> из {pct(c.planMargin)}</span></div>
       </section>
 
       {c.sigs.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          {c.sigs.map((s, i) => <div key={i} className={'sig ' + s.kind}><SigIcon kind={s.kind} /><span>{s.text}</span></div>)}
-        </div>
+        <details className="dc">
+          <summary><TriangleAlert size={20} aria-hidden="true" /><span className="grow">Требует внимания</span><span className={'cnt' + (attention > 0 ? ' warn' : '')}>{c.sigs.length}</span><ChevronDown size={18} className="chv" aria-hidden="true" /></summary>
+          <div className="dc-body">{c.sigs.map((x, i) => <div key={i} className={'sig ' + x.kind}><SigIcon kind={x.kind} /><span>{x.text}</span></div>)}</div>
+        </details>
       )}
 
-      <section className="card">
-        <h2>Освоено и потрачено</h2>
-        <Chart series={c.series} />
-      </section>
-
-      <section className="card">
-        <h2>Позиции КП</h2>
+      <section className="card pos">
+        <h2>Что сделано</h2>
         <div className="plist">
           {c.rows.filter(r => r.q > 0).sort((a, b) => b.osv - a.osv).map(r => {
             const bad = r.margin !== null && r.margin < 0 && r.ready >= 0.1
@@ -73,9 +68,7 @@ export default async function ObjectPage({ params }: { params: Promise<{ id: str
                 <div className={'meter' + (bad ? ' bad' : '')}><i style={{ width: Math.min(100, r.ready * 100) + '%' }} /></div>
                 <div className="psub">
                   <span>{r.q} из {r.qty} {r.unit}</span>
-                  <span>
-                    освоено {short(r.osv)} · <span className={bad ? 'tc-bad' : r.margin !== null && r.margin >= 0.15 ? 'tc-ok' : ''}>маржа {r.margin === null ? '—' : pct(r.margin)}</span>
-                  </span>
+                  <span className={bad ? 'tc-bad' : r.margin !== null && r.margin >= 0.15 ? 'tc-ok' : ''}>маржа {r.margin === null ? 'нет данных' : pct(r.margin)}</span>
                 </div>
               </div>
             )
@@ -93,11 +86,25 @@ export default async function ObjectPage({ params }: { params: Promise<{ id: str
             ))}
           </details>
         )}
-        <p className="mut" style={{ margin: '12px 0 0' }}>Общие расходы (техника, топливо, поденщики) распределены по позициям пропорционально освоению. Расходы с ЭСФ считаются без НДС.</p>
       </section>
 
-      <section className="card">
-        <h2>Бригады на объекте</h2>
+      <details className="dc">
+        <summary><ChartLine size={20} aria-hidden="true" /><span className="grow">График и прогноз</span><ChevronDown size={18} className="chv" aria-hidden="true" /></summary>
+        <div className="dc-body">
+          <Chart series={c.series} />
+          <dl className="kv" style={{ marginTop: 12 }}>
+            <dt>Освоено</dt><dd>{short(c.osv)}</dd>
+            <dt>Прогноз прибыли</dt><dd className={c.fcProfit < 0 ? 'tc-bad' : ''}>{short(c.fcProfit)} (маржа {pct(c.fcMargin)})</dd>
+            {c.finishDate && <><dt>Закончим</dt><dd>примерно {c.finishDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })} при текущем темпе</dd></>}
+            <dt>Договор</dt><dd>{money(c.contract)} без НДС</dd>
+          </dl>
+          <p className="mut" style={{ margin: '12px 0 0', fontSize: 13 }}>Общие расходы (техника, топливо, поденщики) распределены по позициям пропорционально освоению. Расходы с ЭСФ считаются без НДС.</p>
+        </div>
+      </details>
+
+      <details className="dc">
+        <summary><Users size={20} aria-hidden="true" /><span className="grow">Бригады</span><span className="cnt">{d.crews.length}</span><ChevronDown size={18} className="chv" aria-hidden="true" /></summary>
+        <div className="dc-body">
         {d.crews.map(cr => {
           const b = crewBalance(cr.id, d.reps, d.paidBy.get(cr.id) ?? 0)
           return (
@@ -128,10 +135,12 @@ export default async function ObjectPage({ params }: { params: Promise<{ id: str
             <button className="btn pri">Добавить</button>
           </form>
         </details>
-      </section>
+        </div>
+      </details>
 
-      <section className="card">
-        <h2>Журнал отчётов</h2>
+      <details className="dc">
+        <summary><ClipboardList size={20} aria-hidden="true" /><span className="grow">Журнал отчётов</span><span className="cnt">{d.reps.length}</span><ChevronDown size={18} className="chv" aria-hidden="true" /></summary>
+        <div className="dc-body">
         {d.reps.map(r => {
           const lab = r.labor_entries.reduce((a, l) => a + l.amount, 0)
           const ex = r.expenses.reduce((a, e) => a + expCost(e), 0)
@@ -161,7 +170,8 @@ export default async function ObjectPage({ params }: { params: Promise<{ id: str
           )
         })}
         {!d.reps.length && <p className="mut" style={{ margin: 0 }}>Отчётов пока нет.</p>}
-      </section>
-    </>
+        </div>
+      </details>
+    </div>
   )
 }
