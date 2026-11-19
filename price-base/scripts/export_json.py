@@ -89,6 +89,19 @@ for r in sheet_rows("Прайсы"):
         quote=txt(r.get("Цитата даты/цены (агент)")), check_text=txt(r.get("Сверка со страницей")), live=(r.get("Живая карточка (цена видна при сверке)") == "да"),
         region=txt(r.get("Город")), note=txt(r.get("Условия / примечание источника"))))
 
+# ---- простые цифры по позиции: только подтверждённые на странице предложения (live), медиана и размах
+import statistics
+by_pid = {}
+for r in records:
+    if r["live"] and r["ex_vat"]:
+        by_pid.setdefault(r["pid"], []).append(r["ex_vat"])
+for p_ in positions:
+    v = by_pid.get(p_["pid"], [])
+    p_["n_live"] = len(v)
+    p_["med_live"] = round(statistics.median(v), 2) if v else None
+    p_["min_live"] = round(min(v), 2) if v else None
+    p_["max_live"] = round(max(v), 2) if v else None
+
 out = dict(built_at=datetime.datetime.now().isoformat(timespec="seconds"), positions=positions, suppliers=suppliers, records=records)
 os.makedirs(os.path.join(ROOT, "data", "export"), exist_ok=True)
 p = os.path.join(ROOT, "data", "export", "price_base.json")

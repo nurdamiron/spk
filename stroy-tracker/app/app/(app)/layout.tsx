@@ -12,7 +12,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const p = await requireProfile()
   const links: NavLink[] =
     p.role === 'owner'
-      ? [{ href: '/', label: 'Объекты', icon: 'home' }, { href: '/money', label: 'Деньги', icon: 'wallet' }, { href: '/prices', label: 'Цены', icon: 'tags' }, { href: '/team', label: 'Команда', icon: 'users' }]
+      ? [{ href: '/', label: 'Объекты', icon: 'home' }, { href: '/prices', label: 'Цены', icon: 'tags' }, { href: '/more', label: 'Ещё', icon: 'more', also: ['/money', '/team'] }]
       : p.role === 'foreman'
         ? [{ href: '/report', label: 'Отчёт', icon: 'check' }, { href: '/history', label: 'История', icon: 'clock' }]
         : [{ href: '/money', label: 'Деньги', icon: 'wallet' }]
@@ -29,7 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {p.demo && (
           <div className="demobar" role="status">
             <FlaskConical size={18} aria-hidden="true" />
-            <span>Демо: учебные данные, изменения не сохраняются. Поставщики и цены настоящие.</span>
+            <span>Демо: объекты учебные, цены настоящие, ничего не сохраняется</span>
             <Link href="/login">Роль</Link>
           </div>
         )}
