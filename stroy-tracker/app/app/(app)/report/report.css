@@ -1,0 +1,14 @@
+/* Форма отчёта: короче и крупнее для пальца */
+.rep .rhead .obj { font-size: 18px; }
+.rep .group .gi .after { font-size: 13px; }
+/* категории расхода кнопками вместо списка */
+.rep .cats { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 8px; }
+.rep .cat { min-height: 40px; padding: 0 14px; border: 0; border-radius: 99px; background: var(--fill); color: var(--tx); font-size: 14.5px; font-weight: 600; cursor: pointer; }
+.rep .cat.on { background: var(--ac); color: #fff; }
+/* «Подробнее» у расхода: общее правило details добавляет линию и отступы, здесь они не нужны */
+.rep details.xmore { padding: 0; border-top: 0; margin-top: 6px; }
+.rep .xmore > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; min-height: 42px; align-items: center; font-size: 14px; font-weight: 600; color: var(--ac); }
+.rep .xmore > summary::-webkit-details-marker { display: none; }
+.rep .xmore > summary .mut { font-weight: 500; font-size: 12.5px; text-align: right; }
+.rep .xmore .f2 { margin-top: 4px; }
+.rep input.full { margin-top: 2px; width: 100%; }

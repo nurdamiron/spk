@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { enqueue, sendReport, shrinkPhoto } from '@/lib/queue'
 import { Check, Clock, Plus, Camera, X, Trash2 } from 'lucide-react'
 import { Back } from '@/components/Icons'
+import './report.css'
 
 type Item = { id: string; name: string; unit: string; qty: number; done: number }
 type CrewOpt = { id: string; name: string; type: 'hour' | 'day' | 'volume' | 'fixed'; on: boolean }
@@ -101,7 +102,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
   const nExp = f.exps.filter(e => parseFloat(e.amount) > 0).length
 
   return (
-    <>
+    <div className="rep">
       <div className="card rhead">
         <div className="obj">{props.objectName}</div>
         <div className="meta">
@@ -110,8 +111,6 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
           <span className="pill info">В подотчёте: {props.imprestLeft}</span>
         </div>
       </div>
-      <div className="hint">Цен и прибыли здесь нет. Люди подставлены из прошлых отчётов.</div>
-
       <div className="sec"><span className="num">1</span><h2>Что сделали</h2></div>
       <div className="group">
         {f.rows.map((r, i) => {
@@ -131,10 +130,9 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
               {it && (
                 <>
                   <div className="after">
-                    <span>Всего будет {Math.round(after * 10) / 10} из {it.qty} {it.unit}</span>
-                    {after > it.qty && <span className="pill bad">больше КП, это доп. работа?</span>}
+                    <span>Будет {Math.round(after * 10) / 10} из {it.qty} {it.unit}</span>
+                    {after > it.qty && <span className="pill bad">больше КП</span>}
                   </div>
-                  <div className={'meter' + (after > it.qty ? ' bad' : '')} style={{ marginTop: 6 }}><i style={{ width: Math.min(100, (after / it.qty) * 100) + '%' }} /></div>
                 </>
               )}
             </div>
@@ -142,7 +140,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
         })}
         <button type="button" className="addrow" onClick={() => set({ rows: [...f.rows, { item: '', qty: '' }] })}><Plus size={20} />Ещё позиция из КП</button>
         <label className="shotbtn">
-          <Camera size={20} />Сфотографировать{f.photos.length > 0 && <span className="mut" style={{ marginLeft: 'auto' }}>{f.photos.length}</span>}
+          <Camera size={20} />Фото{f.photos.length > 0 && <span className="mut" style={{ marginLeft: 'auto' }}>{f.photos.length}</span>}
           <input type="file" accept="image/*" capture="environment" multiple onChange={e => { addPhotos(e.target.files); e.target.value = '' }} />
         </label>
         {f.photos.length > 0 && (
@@ -158,7 +156,7 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
 
       <div className="sec"><span className="num">2</span><h2>Люди и техника</h2></div>
       <div className="group">
-        {crews.length === 0 && <div className="empty-hint">Владелец ещё не добавил бригады на этот объект.</div>}
+        {crews.length === 0 && <div className="empty-hint">Бригад на объекте пока нет.</div>}
         {f.people.map((p, i) => {
           const c = crews[i]
           const hasVal = c.type === 'hour' || c.type === 'day'
@@ -191,30 +189,37 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
                 <input type="number" inputMode="numeric" placeholder="Сумма, ₸" value={e.amount} onChange={ev => upd({ amount: ev.target.value })} aria-label="Сумма" />
                 <button type="button" className="btn" aria-label="Убрать расход" onClick={() => set({ exps: f.exps.filter((_, j) => j !== i) })}><Trash2 size={20} /></button>
               </div>
-              <div className="f2">
-                <select value={e.category} onChange={ev => upd({ category: ev.target.value })} aria-label="Категория">{['Материал', 'Топливо', 'Доставка', 'Техника', 'Прочее'].map(c => <option key={c}>{c}</option>)}</select>
-                <select value={e.funding} onChange={ev => upd({ funding: ev.target.value })} aria-label="Откуда деньги">
-                  <option value="imprest">Из подотчёта</option><option value="office">Оплатил офис</option><option value="transfer">Перечисление</option>
-                </select>
-                <select value={e.esf ? '1' : '0'} onChange={ev => upd({ esf: ev.target.value === '1' })} aria-label="НДС">
-                  <option value="1">Есть ЭСФ с НДС</option><option value="0">Без НДС, без ЭСФ</option>
-                </select>
-                <select value={e.item} onChange={ev => upd({ item: ev.target.value })} aria-label="Позиция">
-                  <option value="">Общий расход</option>{items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-                </select>
-                <input type="text" className="full" placeholder="Комментарий, например: труба ПЭ 110, 40 м" value={e.comment} onChange={ev => upd({ comment: ev.target.value })} />
+              <div className="cats" role="group" aria-label="Категория">
+                {['Материал', 'Топливо', 'Доставка', 'Техника', 'Прочее'].map(c => (
+                  <button key={c} type="button" className={'cat' + (e.category === c ? ' on' : '')} onClick={() => upd({ category: c })}>{c}</button>
+                ))}
               </div>
-              <label className="chk"><input type="checkbox" className="sw" checked={e.receipt} onChange={ev => upd({ receipt: ev.target.checked })} />Чек есть</label>
+              <input type="text" className="full" placeholder="Что купили (необязательно)" value={e.comment} onChange={ev => upd({ comment: ev.target.value })} />
+              <details className="xmore">
+                <summary>Подробнее<span className="mut">{e.funding === 'imprest' ? 'из подотчёта' : e.funding === 'office' ? 'оплатил офис' : 'перечисление'}{e.esf ? ', ЭСФ' : ', без ЭСФ'}{e.receipt ? '' : ', без чека'}</span></summary>
+                <div className="f2">
+                  <select value={e.funding} onChange={ev => upd({ funding: ev.target.value })} aria-label="Откуда деньги">
+                    <option value="imprest">Из подотчёта</option><option value="office">Оплатил офис</option><option value="transfer">Перечисление</option>
+                  </select>
+                  <select value={e.esf ? '1' : '0'} onChange={ev => upd({ esf: ev.target.value === '1' })} aria-label="НДС">
+                    <option value="1">Есть ЭСФ с НДС</option><option value="0">Без НДС, без ЭСФ</option>
+                  </select>
+                  <select value={e.item} onChange={ev => upd({ item: ev.target.value })} aria-label="Позиция">
+                    <option value="">Общий расход</option>{items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                  </select>
+                </div>
+                <label className="chk"><input type="checkbox" className="sw" checked={e.receipt} onChange={ev => upd({ receipt: ev.target.checked })} />Чек есть</label>
+              </details>
             </div>
           )
         })}
-        {f.exps.length === 0 && <div className="empty-hint">Расходов за день нет. Добавьте, если что-то покупали.</div>}
+        {f.exps.length === 0 && <div className="empty-hint">Расходов нет.</div>}
         <button type="button" className="addrow" onClick={() => set({ exps: [...f.exps, emptyExp()] })}><Plus size={20} />Добавить расход</button>
       </div>
 
       {error && <div className="err" role="alert">{error}</div>}
       <div className="stickybar">
-        <div className="sum">Выполнение: {nProg} · Людей: {nPeople} · Расходов: {nExp}</div>
+        <div className="sum">Сделано {nProg} · людей {nPeople} · расходов {nExp}</div>
         <button className="btn pri big" disabled={busy} onClick={submit}>
           {busy ? 'Отправляем…' : online ? 'Отправить отчёт' : 'Сохранить, отправится при связи'}
         </button>
@@ -237,6 +242,6 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
