@@ -12,6 +12,8 @@ type Row = { item: string; qty: string }
 type Person = { crew: string; on: boolean; val: string }
 type Exp = { category: string; amount: string; funding: string; esf: boolean; item: string; comment: string; receipt: boolean }
 type Photo = { blob: Blob; url: string }
+type Head = { label: string; people: string }
+type Tech = { name: string; qty: string }
 
 const TYPE_LBL = { hour: 'за час', day: 'за день', volume: 'за объём', fixed: 'фикс за этап' } as const
 const emptyExp = (): Exp => ({ category: 'Материал', amount: '', funding: 'imprest', esf: true, item: '', comment: '', receipt: true })
@@ -25,6 +27,11 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
     people: crews.map(c => ({ crew: c.id, on: c.on, val: c.type === 'hour' ? '8' : '1' })) as Person[],
     exps: [] as Exp[],
     photos: [] as Photo[],
+    heads: [] as Head[],
+    tech: [] as Tech[],
+    done: '',
+    notDone: '',
+    reason: '',
   })
   const [f, setF] = useState(fresh)
   const [picker, setPicker] = useState<number | null>(null)
@@ -69,9 +76,13 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
       kp_item_id: e.item || null, has_receipt: e.receipt, comment: e.comment.trim(),
     }))
     if (f.rows.some(r => r.item && !(parseFloat(r.qty) > 0))) return setError('У выбранной позиции укажите объём')
-    if (!progress.length && !labor.length && !expenses.length) return setError('Заполните хотя бы выполнение, людей или расход')
+    const headcount = f.heads.filter(h => h.label.trim() && parseInt(h.people) >= 0 && h.people !== '').map(h => ({ label: h.label.trim(), people: parseInt(h.people) }))
+    const equipment = f.tech.filter(t => t.name.trim() && parseFloat(t.qty) > 0).map(t => ({ name: t.name.trim(), qty: parseFloat(t.qty) }))
+    const notes = { done: f.done.trim(), not_done: f.notDone.trim(), reason: f.reason.trim() }
+    const hasNotes = !!(notes.done || notes.not_done || notes.reason)
+    if (!progress.length && !labor.length && !expenses.length && !headcount.length && !equipment.length && !hasNotes) return setError('Заполните хотя бы что-то: выполнение, людей, расход или итог дня')
 
-    const item = { clientId: uid(), payload: { clientId: '', object_id: props.objectId, report_date: f.date, progress, labor, expenses }, photos: f.photos.map(p => p.blob) }
+    const item = { clientId: uid(), payload: { clientId: '', object_id: props.objectId, report_date: f.date, progress, labor, expenses, headcount, equipment, notes }, photos: f.photos.map(p => p.blob) }
     item.payload.clientId = item.clientId
     setBusy(true)
     const r = navigator.onLine ? await sendReport(item) : 'later'
@@ -179,6 +190,33 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
         })}
       </div>
 
+      <div className="group">
+        {f.heads.map((h, i) => (
+          <div key={'h' + i} className="gi">
+            <div className="qtyrow" style={{ marginTop: 0 }}>
+              <input type="text" placeholder="Кто (бригада, роль)" value={h.label} aria-label="Кто"
+                onChange={e => set({ heads: f.heads.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)) })} />
+              <input type="number" inputMode="numeric" placeholder="Чел." value={h.people} aria-label="Сколько человек" style={{ maxWidth: 90 }}
+                onChange={e => set({ heads: f.heads.map((x, j) => (j === i ? { ...x, people: e.target.value } : x)) })} />
+              <button type="button" className="btn" aria-label="Убрать" onClick={() => set({ heads: f.heads.filter((_, j) => j !== i) })}><Trash2 size={20} /></button>
+            </div>
+          </div>
+        ))}
+        {f.tech.map((t, i) => (
+          <div key={'t' + i} className="gi">
+            <div className="qtyrow" style={{ marginTop: 0 }}>
+              <input type="text" placeholder="Техника (камаз, экскаватор)" value={t.name} aria-label="Техника"
+                onChange={e => set({ tech: f.tech.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)) })} />
+              <input type="number" inputMode="decimal" placeholder="Часов" value={t.qty} aria-label="Часов" style={{ maxWidth: 90 }}
+                onChange={e => set({ tech: f.tech.map((x, j) => (j === i ? { ...x, qty: e.target.value } : x)) })} />
+              <button type="button" className="btn" aria-label="Убрать" onClick={() => set({ tech: f.tech.filter((_, j) => j !== i) })}><Trash2 size={20} /></button>
+            </div>
+          </div>
+        ))}
+        <button type="button" className="addrow" onClick={() => set({ heads: [...f.heads, { label: '', people: '' }] })}><Plus size={20} />Сколько людей на объекте</button>
+        <button type="button" className="addrow" onClick={() => set({ tech: [...f.tech, { name: '', qty: '' }] })}><Plus size={20} />Какая техника работала</button>
+      </div>
+
       <div className="sec"><span className="num">3</span><h2>Расходы</h2></div>
       <div className="group">
         {f.exps.map((e, i) => {
@@ -215,6 +253,13 @@ export function ReportForm(props: { objectId: string; objectName: string; today:
         })}
         {f.exps.length === 0 && <div className="empty-hint">Расходов нет.</div>}
         <button type="button" className="addrow" onClick={() => set({ exps: [...f.exps, emptyExp()] })}><Plus size={20} />Добавить расход</button>
+      </div>
+
+      <div className="sec"><span className="num">4</span><h2>Итог дня</h2></div>
+      <div className="group">
+        <div className="gi"><textarea className="full" rows={2} placeholder="Что сделано" value={f.done} onChange={e => set({ done: e.target.value })} aria-label="Что сделано" /></div>
+        <div className="gi"><textarea className="full" rows={2} placeholder="Что не сделано" value={f.notDone} onChange={e => set({ notDone: e.target.value })} aria-label="Что не сделано" /></div>
+        {f.notDone.trim() && <div className="gi"><input type="text" className="full" placeholder="Почему не сделано" value={f.reason} onChange={e => set({ reason: e.target.value })} aria-label="Причина" /></div>}
       </div>
 
       {error && <div className="err" role="alert">{error}</div>}

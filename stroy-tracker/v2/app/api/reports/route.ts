@@ -12,6 +12,9 @@ type Payload = {
   progress: { kp_item_id: string; qty: number }[]
   labor: { crew_id: string; value: number }[]
   expenses: { category: string; amount: number; has_esf: boolean; funding: string; kp_item_id: string | null; has_receipt: boolean; comment: string }[]
+  notes?: { done?: string; not_done?: string; reason?: string }
+  headcount?: { label: string; people: number; hours?: number | null }[]
+  equipment?: { name: string; qty: number }[]
 }
 
 const fail = (error: string, status = 400) => NextResponse.json({ error }, { status })
@@ -90,7 +93,16 @@ export async function POST(req: Request) {
       comment: String(e.comment ?? '').slice(0, 300) || null,
     })
   }
-  if (!progress.length && !labor.length && !expenses.length) return fail('Отчёт пустой')
+  const clip = (v: unknown) => String(v ?? '').trim().slice(0, 1000)
+  const notes = { done: clip(body.notes?.done), not_done: clip(body.notes?.not_done), reason: clip(body.notes?.reason) }
+  const hasNotes = !!(notes.done || notes.not_done || notes.reason)
+  const headcount = (body.headcount ?? [])
+    .map(h => ({ label: clip(h.label).slice(0, 80), people: Math.round(Number(h.people)), hours: h.hours ? Number(h.hours) : null }))
+    .filter(h => h.label && h.people >= 0 && h.people < 10000 && (h.hours === null || (h.hours > 0 && h.hours <= 24)))
+  const equipment = (body.equipment ?? [])
+    .map(e => ({ name: clip(e.name).slice(0, 80), qty: Number(e.qty) }))
+    .filter(e => e.name && e.qty > 0 && e.qty < 1000)
+  if (!progress.length && !labor.length && !expenses.length && !hasNotes && !headcount.length && !equipment.length) return fail('Отчёт пустой')
 
   const { data: rep, error } = await db
     .from('reports')
@@ -104,6 +116,9 @@ export async function POST(req: Request) {
     if (progress.length) steps.push(db.from('progress_entries').insert(progress.map(x => ({ report_id: rep.id, kp_item_id: x.kp_item_id, qty: x.qty }))))
     if (labor.length) steps.push(db.from('labor_entries').insert(labor.map(x => ({ ...x, report_id: rep.id }))))
     if (expenses.length) steps.push(db.from('expenses').insert(expenses.map(x => ({ ...x, report_id: rep.id }))))
+    if (hasNotes) steps.push(db.from('report_notes').insert({ report_id: rep.id, ...notes }))
+    if (headcount.length) steps.push(db.from('headcount_entries').insert(headcount.map(x => ({ ...x, report_id: rep.id }))))
+    if (equipment.length) steps.push(db.from('equipment_entries').insert(equipment.map(x => ({ report_id: rep.id, name: x.name, qty: x.qty }))))
     for (const r of await Promise.all(steps)) if (r.error) throw r.error
 
     for (let i = 0; i < photos.length; i++) {

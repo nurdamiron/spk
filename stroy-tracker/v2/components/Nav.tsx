@@ -1,9 +1,9 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ClipboardCheck, Clock, House, Menu, Tags, Users, Wallet, type LucideIcon } from 'lucide-react'
+import { ClipboardCheck, Clock, FileText, House, Menu, Tags, Users, Wallet, type LucideIcon } from 'lucide-react'
 
-const ICONS: Record<string, LucideIcon> = { home: House, wallet: Wallet, check: ClipboardCheck, clock: Clock, users: Users, tags: Tags, more: Menu }
+const ICONS: Record<string, LucideIcon> = { home: House, wallet: Wallet, check: ClipboardCheck, clock: Clock, users: Users, tags: Tags, docs: FileText, more: Menu }
 export type NavLink = { href: string; label: string; icon: keyof typeof ICONS; also?: string[] }
 
 export function Nav({ links }: { links: NavLink[] }) {

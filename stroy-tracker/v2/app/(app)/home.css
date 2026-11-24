@@ -10,3 +10,7 @@
 .home .ofig .mid { font-size: 26px; }
 .hn { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13.5px; font-weight: 600; color: var(--warn); }
 .hn svg { flex: none; }
+.todaybox { padding: 14px 16px; margin-bottom: 12px; }
+.todaybox.miss { border-left: 4px solid var(--warn); }
+.todaybox.allok { border-left: 4px solid var(--ok); }
+.todaybox .mut { font-size: 14px; margin-top: 2px; }

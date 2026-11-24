@@ -12,10 +12,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const p = await requireProfile()
   const links: NavLink[] =
     p.role === 'owner'
-      ? [{ href: '/', label: 'Объекты', icon: 'home' }, { href: '/prices', label: 'Цены', icon: 'tags' }, { href: '/more', label: 'Ещё', icon: 'more', also: ['/money', '/team'] }]
+      ? [{ href: '/', label: 'Объекты', icon: 'home' }, { href: '/documents', label: 'Документы', icon: 'docs' }, { href: '/prices', label: 'Цены', icon: 'tags' }, { href: '/more', label: 'Ещё', icon: 'more', also: ['/money', '/team', '/inbox'] }]
       : p.role === 'foreman'
         ? [{ href: '/report', label: 'Отчёт', icon: 'check' }, { href: '/history', label: 'История', icon: 'clock' }]
-        : [{ href: '/money', label: 'Деньги', icon: 'wallet' }]
+        : [{ href: '/money', label: 'Деньги', icon: 'wallet' }, { href: '/documents', label: 'Документы', icon: 'docs' }]
   return (
     <>
       <header>

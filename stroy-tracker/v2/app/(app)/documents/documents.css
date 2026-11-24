@@ -1,0 +1,13 @@
+.docs h1 { font-size: 26px; margin: 6px 2px 12px; }
+.docs .addbox { padding: 0; margin-bottom: 14px; }
+.docs .addbox > summary { display: flex; align-items: center; min-height: 58px; padding: 0 16px; font-size: 16px; font-weight: 600; color: var(--ac); cursor: pointer; list-style: none; }
+.docs .addbox > summary::-webkit-details-marker { display: none; }
+.docs .addbody { padding: 0 16px 16px; }
+.docs .drow > summary { display: flex; align-items: center; gap: 12px; min-height: 64px; cursor: pointer; list-style: none; }
+.docs .drow > summary::-webkit-details-marker { display: none; }
+.docs .dn { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.docs .dn b { font-size: 16px; overflow-wrap: anywhere; }
+.docs .dn small { font-size: 12.5px; color: var(--tx2); overflow-wrap: anywhere; }
+.docs .da { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-weight: 600; flex: none; }
+.docs .dact { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 4px 0 12px; }
+.docs .dact .btn { min-height: 44px; }

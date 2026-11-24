@@ -24,9 +24,30 @@ export default async function Home() {
   )
   const profit = cards.reduce((a, x) => a + x.c.osv - x.c.spent, 0)
 
+  // кто сегодня не отчитался: активные объекты без отчёта за сегодня и прорабы на них
+  const db = await getDb()
+  const ids = (objs ?? []).map(o => o.id)
+  const [todayReps, members] = ids.length
+    ? await Promise.all([
+        db.from('reports').select('object_id').eq('report_date', today).in('object_id', ids),
+        db.from('object_members').select('object_id, profiles(name, role)').in('object_id', ids),
+      ])
+    : [{ data: [] }, { data: [] }]
+  const reported = new Set((todayReps.data ?? []).map((r: any) => r.object_id))
+  const missing = (objs ?? [])
+    .filter(o => !reported.has(o.id))
+    .map(o => ({ id: o.id, name: o.name, who: (members.data ?? []).filter((m: any) => m.object_id === o.id && m.profiles?.role === 'foreman').map((m: any) => m.profiles.name).join(', ') }))
+
   return (
     <div className="home">
       <h1>Объекты</h1>
+
+      {cards.length > 0 && (
+        <div className={'card todaybox ' + (missing.length ? 'miss' : 'allok')}>
+          <b>{missing.length ? `Сегодня не отчитались: ${missing.length}` : 'Сегодня все отчитались'}</b>
+          {missing.map(m => <div key={m.id} className="mut">{m.name}{m.who ? ` · ${m.who}` : ''}</div>)}
+        </div>
+      )}
 
       {cards.length > 1 && (
         <div className="hline">

@@ -12,3 +12,4 @@
 .rep .xmore > summary .mut { font-weight: 500; font-size: 12.5px; text-align: right; }
 .rep .xmore .f2 { margin-top: 4px; }
 .rep input.full { margin-top: 2px; width: 100%; }
+.rep textarea.full { margin-top: 2px; width: 100%; min-height: 64px; resize: vertical; font-size: 16px; }
