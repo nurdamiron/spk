@@ -1,0 +1,5 @@
+/* Плашка демо-режима */
+.demobar { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; padding: 10px 12px; border-radius: 14px; background: var(--acbg); color: var(--ac); font-size: 13px; line-height: 1.3; font-weight: 600; }
+.demobar svg { flex: none; }
+.demobar span { flex: 1; min-width: 0; }
+.demobar a { flex: none; display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 10px; background: var(--ac); color: #fff; text-decoration: none; font-size: 13.5px; }

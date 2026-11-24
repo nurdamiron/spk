@@ -1,0 +1,33 @@
+/* Команда: список людей, подробности и добавление по нажатию */
+.tm h1 { font-size: 26px; margin: 6px 2px 12px; }
+.tm details { padding: 0; border-top: 0; }
+.tm details > summary { list-style: none; cursor: pointer; }
+.tm details > summary::-webkit-details-marker { display: none; }
+.tm .add { background: var(--card); border-radius: 20px; margin-bottom: 14px; }
+.tm .add > summary { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 16px; font-size: 16px; font-weight: 600; color: var(--ac); }
+.tm .add[open] > summary { color: var(--tx); }
+.tm .add-body { padding: 0 16px 16px; }
+.tm .people { background: var(--card); border-radius: 20px; overflow: hidden; }
+.tm details.pr + details.pr { border-top: 0.5px solid var(--sep); }
+.tm .pr > summary { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; }
+.tm .pr-name { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tm .pr-name b { font-size: 16px; overflow-wrap: anywhere; }
+.tm .pr-name small { font-size: 12.5px; color: var(--tx2); }
+.tm .pr-chev { flex: none; color: var(--tx2); transition: transform 0.2s; }
+.tm .pr[open] > summary .pr-chev { transform: rotate(180deg); }
+.tm .pr-body { padding: 0 14px 14px; }
+.tm .obj-row { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; }
+.tm .obj-row span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.tm .obj-row .btn { flex: none; width: 44px; min-height: 40px; padding: 0; }
+.tm .obj-add { display: flex; gap: 8px; margin-top: 6px; }
+.tm .obj-add select { flex: 1; min-width: 0; }
+.tm .access { margin-top: 12px; }
+.tm .access .btn { width: 100%; }
+.tm .lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tx2); margin: 4px 2px 8px; }
+/* выбор роли кнопками */
+.roles { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+.roles label { cursor: pointer; }
+.roles input { position: absolute; opacity: 0; pointer-events: none; }
+.roles span { display: inline-flex; align-items: center; min-height: 42px; padding: 0 16px; border-radius: 99px; background: var(--fill); color: var(--tx); font-size: 15px; font-weight: 600; }
+.roles input:checked + span { background: var(--ac); color: #fff; }
+.roles input:focus-visible + span { box-shadow: 0 0 0 3px var(--acbg); }

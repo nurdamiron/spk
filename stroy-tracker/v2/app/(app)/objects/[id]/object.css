@@ -1,0 +1,29 @@
+/* Страница объекта: главное сверху, остальное раскрывается */
+.ob h1 { font-size: 24px; line-height: 1.2; margin: 8px 2px 4px; overflow-wrap: anywhere; }
+.ob .sub { margin: 0 2px 12px; font-size: 14px; }
+.ob .big2 { font-size: 46px; line-height: 1.05; font-weight: 700; letter-spacing: -0.045em; margin: 4px 0 2px; }
+.ob .hero { padding: 18px 16px; margin-bottom: 10px; }
+.ob .hero .l { font-size: 13px; text-transform: none; letter-spacing: 0; font-weight: 600; }
+.ob .two { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 14px; color: var(--tx2); }
+.ob .two b { color: var(--tx); font-weight: 650; }
+
+/* раскрывающиеся блоки */
+.ob details.dc { background: var(--card); border-radius: 18px; padding: 0; border-top: 0; margin-bottom: 10px; overflow: hidden; }
+.ob details.dc > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 16px; font-size: 16px; font-weight: 600; }
+.ob details.dc > summary::-webkit-details-marker { display: none; }
+.ob details.dc > summary .grow { flex: 1; min-width: 0; }
+.ob details.dc > summary .cnt { min-width: 26px; height: 24px; padding: 0 8px; border-radius: 99px; background: var(--fill); color: var(--tx2); font-size: 13px; display: inline-grid; place-items: center; }
+.ob details.dc > summary .cnt.warn { background: var(--warnbg); color: var(--warn); }
+.ob details.dc > summary .chv { color: var(--tx2); transition: transform 0.2s; flex: none; }
+.ob details.dc[open] > summary .chv { transform: rotate(180deg); }
+.ob details.dc > summary svg:first-child { color: var(--ac); flex: none; }
+.ob .dc-body { padding: 0 16px 16px; }
+.ob .dc-body details { padding: 8px 0; }
+.ob .dc-body .sig { font-size: 14px; }
+
+/* позиции КП */
+.ob .card.pos { padding: 16px; }
+.ob .card.pos h2 { margin: 0 0 8px; }
+.ob .plist .prow { padding: 12px 0; }
+.ob .pname { font-size: 15px; }
+.ob .psub { font-size: 12.5px; }
